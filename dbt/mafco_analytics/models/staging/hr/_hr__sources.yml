@@ -1,0 +1,24 @@
+sources:
+  - name: ukg
+    catalog: prod_hr
+    schema: ukg
+    tables:
+      - name: EMPLOYEE
+      - name: EMPLOYMENT
+      - name: EMPLOYEE_STATUS
+      - name: COMPANY
+      - name: JOB
+      - name: LOCATION
+      - name: ORGANIZATION_LEVEL
+      - name: COMPENSATION
+      - name: ORGANIZATION_REPORTING_CATEGORY   # used by dim_org_reporting_category.sql
+      - name: DEPENDENT_DEDUCTION                # used by fct_benefits.sql
+      - name: PAYROLL_DEDUCTION_HISTORY          # used by fct_deduction.sql
+      - name: EARNING_HISTORY_BASE_ELEMENT       # used by fct_earnings.sql
+      - name: PAY_REGISTER                       # used by fct_payroll.sql
+
+  - name: hr_raw
+    catalog: prod_hr       # confirm this matches wherever the SuccessFactors bronze table actually lands
+    schema: hr_raw          # confirm this matches the actual schema once the SuccessFactors bronze loader exists
+    tables:
+      - name: dim_emp        # used by stg_successfactors_employee.sql

@@ -1,0 +1,14 @@
+resources:
+  jobs:
+    load_bronze_successfactors:
+      name: load_bronze_successfactors
+ 
+      tasks:
+        - task_key: load_dim_emp
+          notebook_task:
+            notebook_path: ../src/load_successfactors.py
+            base_parameters:
+              catalog: prod_hr
+
+      # No schedule yet -- run manually until the export cadence from
+      # SuccessFactors is known (daily? weekly? on-demand export?).

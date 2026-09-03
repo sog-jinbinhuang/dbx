@@ -1,0 +1,25 @@
+resources:
+  jobs:
+    onestream_monthly_load:
+      name: onestream_monthly_load
+
+      tasks:
+        - task_key: load_onestream
+          notebook_task:
+            notebook_path: ../src/load_onestream.py
+            base_parameters:
+              catalog: ${var.catalog}
+
+      # OneStream only produces a new facts_/hierarchy_ file once a month,
+      # so this runs monthly rather than on the daily_full_refresh schedule.
+      # Downstream dbt staging models that read these bronze tables still
+      # get refreshed daily as part of daily_full_refresh's dbt_refresh task
+      # -- this job only needs to keep the bronze tables themselves current.
+      schedule:
+        quartz_cron_expression: "0 0 8 1 * ?"   # 8am UTC on the 1st of each month
+        timezone_id: "UTC"
+        pause_status: PAUSED   # unpause once you've verified a manual run succeeds end-to-end
+
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com

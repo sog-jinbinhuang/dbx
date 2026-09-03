@@ -1,0 +1,27 @@
+select
+    source_database,
+
+        NULLIF(TRIM(`System-ID`), '') as system_id,
+        NULLIF(TRIM(`Country-code`), '') as country_code,
+        NULLIF(TRIM(`Country-name`), '') as country_name,
+        NULLIF(TRIM(`Default-phone-format`), '') as default_phone_format,
+        NULLIF(TRIM(`Default-zip-format`), '') as default_zip_format,
+        NULLIF(TRIM(`Default-currency`), '') as default_currency,
+        NULLIF(TRIM(`Update-by`), '') as update_by,
+        CAST(TRY_TO_TIMESTAMP(`Update-date`, 'yyyy-MM-dd HH:mm:ss.SSSSSSS') AS DATE) as update_date,
+        NULLIF(TRIM(`Update-time`), '') as update_time,
+        NULLIF(TRIM(`Created-by`), '') as created_by,
+        CAST(TRY_TO_TIMESTAMP(`Created-date`, 'yyyy-MM-dd HH:mm:ss.SSSSSSS') AS DATE) as created_date,
+        NULLIF(TRIM(`Security-Access`), '') as security_access,
+        NULLIF(TRIM(`ISO-Country-Code`), '') as iso_country_code,
+        NULLIF(TRIM(`Default-State-Format`), '') as default_state_format,
+        NULLIF(TRIM(`Default-State-Label`), '') as default_state_label,
+        NULLIF(TRIM(`Default-Zip-Label`), '') as default_zip_label,
+        TRY_CAST(`Internal-Key` AS DECIMAL(18,0)) as internal_key,
+        IF(UPPER(TRIM(`States-Required`)) = 'TRUE', TRUE,
+            IF(UPPER(TRIM(`States-Required`)) = 'FALSE', FALSE, NULL)) as states_required,
+        TRY_TO_TIMESTAMP(`Created-Date-Time`, 'yyyy-MM-dd HH:mm:ss.SSSSSSS') as created_date_time,
+        NULLIF(TRIM(`Spare-Char-1`), '') as spare_char_1,
+        IF(UPPER(TRIM(`Use-Postal-Code-For-Sales-Tax`)) = 'TRUE', TRUE,
+            IF(UPPER(TRIM(`Use-Postal-Code-For-Sales-Tax`)) = 'FALSE', FALSE, NULL)) as use_postal_code_for_sales_tax
+from {{ source('bronze', 'country') }}

@@ -1,0 +1,72 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'mafco_analytics'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'mafco_analytics'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# 'env' is passed in via --vars from the job's dbt_task commands (see
+# daily_full_refresh_job.yml). Databricks' dbt_task always uses a single
+# auto-generated profile target called 'databricks_cluster' regardless of
+# the bundle's dev/prod target, so target.name can't be used to switch the
+# hr catalog -- a var is used instead. Default here covers local dbt runs.
+vars:
+  env: dev
+
+seeds:
+  mafco_analytics:
+    +schema: reference
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  mafco_analytics:
+    # +schema here maps to the exact Unity Catalog schema (dev.silver, dev.gold),
+    # thanks to the generate_schema_name macro override in macros/generate_schema_name.sql
+    # -- without that macro, dbt would instead create dev.<target_schema>_silver.
+    staging:
+      +materialized: table
+      +schema: silver
+      hr:
+        # hr models live in a separate catalog from the main analytics catalog.
+        # Switches between prod_hr / dev_hr based on the dbt target (dev vs prod),
+        # mirroring the main catalog's dev/prod separation.
+        +catalog: "{{ 'prod_hr' if env_var('DBT_ENV', 'dev') == 'prod' else 'dev_hr' }}"
+    marts:
+      sales:
+        +materialized: table
+        +schema: gold_sales
+        +tags: ["sales"]
+      finance:
+        +materialized: table
+        +schema: gold_finance
+        +tags: ["finance"]
+      hr:
+        +catalog: "{{ 'prod_hr' if env_var('DBT_ENV', 'dev') == 'prod' else 'dev_hr' }}"
+        +schema: gold_hr
+        +tags: ["hr"]
+      supply_chain:
+        +materialized: table
+        +schema: gold_supply_chain
+        +tags: ["supply_chain"]
+      production:
+        +materialized: table
+        +schema: gold_production
+        +tags: ["production"]

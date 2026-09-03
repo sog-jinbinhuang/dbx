@@ -1,0 +1,39 @@
+sources:
+  - name: bronze
+    catalog: dev
+    schema: bronze
+    tables:
+      - name: product
+      - name: apinvhdr
+      - name: aropen
+      - name: audit_order
+      - name: batch_hdr
+      - name: batch_rec_hdr
+      - name: batch_rec_output
+      - name: batch_rec_trl
+      - name: batch_rec_trl_whs_lot_loc
+      - name: country
+      - name: cust_prod_price
+      - name: cust_product
+      - name: free_field_data
+      - name: gl_accts
+      - name: gl_data
+      - name: gl_entry_header
+      - name: gl_entry_trailer
+      - name: gl_exch_rate
+      - name: inv_transact
+      - name: cust
+      - name: invoice_hdr
+      - name: invoice_trl
+      - name: order_hdr
+      - name: order_trl
+      - name: whs_prod_pkg
+      - name: lot
+      - name: packaging
+      - name: prod_pkg
+      - name: prod_pkg_whs_lot
+      - name: prod_pkg_whs_lot_loc
+      - name: remarks
+      - name: suppname
+      - name: onestream_hierarchy
+      - name: onestream_facts

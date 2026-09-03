@@ -1,0 +1,449 @@
+﻿process,category,type,account_num
+AG-CAKE,Variable O/H Cost,Water,72-70-50200-2314
+AG-CAKE,Variable O/H Cost,Steam,72-70-50202-2314
+AG-CAKE,Variable O/H Cost,Electric,72-70-50203-2314
+AG-CAKE,Variable O/H Cost,Hourly Labor,72-70-50205-2314
+AG-CAKE,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2314
+AG-CAKE,Variable O/H Cost,Professional Services,72-70-50210-2314
+AG-CAKE,Variable O/H Cost,Package,72-70-50217-2314
+AG-CAKE,Variable O/H Cost,Waste Water,72-70-50223-2314
+AG-CAKE,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2314
+AG-CAKE,Fixed O/H Cost,Depreciation,72-70-50207-2314
+AG-CAKE,Fixed O/H Cost,SUP-SALAR,72-70-50214-2314
+AG-CAKE,Fixed O/H Cost,SUP-WELF,72-70-50215-2314
+AG-CAKE,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2314
+AG-CAKE,Fixed O/H Cost,PPV-GEN,72-70-50304-2314
+AG-CAKE,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2314
+AG-CAKE,Absorption Variance,AG-CAKE,72-70-50321-2314
+AG-MM300,Absorption Variance,AG-MM300,72-70-50321-2332
+BLOCK,Variable O/H Cost,Water,55-00-50200-2030
+BLOCK,Variable O/H Cost,Steam,55-00-50202-2030
+BLOCK,Variable O/H Cost,Electric,55-00-50203-2030
+BLOCK,Variable O/H Cost,Hourly Labor,55-00-50205-2030
+BLOCK,Variable O/H Cost,Hourly Labor Benefit,55-00-50206-2030
+BLOCK,Variable O/H Cost,Professional Services,55-00-50210-2030
+BLOCK,Variable O/H Cost,Package,55-00-50217-2030
+BLOCK,Variable O/H Cost,Waste Water,55-00-50223-2030
+BLOCK,Fixed O/H Cost,Repair & Maintenance,55-00-50204-2030
+BLOCK,Fixed O/H Cost,Depreciation,55-00-50207-2030
+BLOCK,Fixed O/H Cost,SUP-SALAR,55-00-50214-2030
+BLOCK,Fixed O/H Cost,SUP-WELF,55-00-50215-2030
+BLOCK,Fixed O/H Cost,PRD-OFFIC,55-00-50222-2030
+BLOCK,Fixed O/H Cost,PPV-GEN,55-00-50304-2030
+BLOCK,Fixed O/H Cost,Inventory Adjustments,55-00-50318-2030
+BLOCK,Absorption Variance,BLOCK,55-00-71350000-2030
+CMAG-CGA,Variable O/H Cost,Water,72-70-50200-2315
+CMAG-CGA,Variable O/H Cost,Steam,72-70-50202-2315
+CMAG-CGA,Variable O/H Cost,Electric,72-70-50203-2315
+CMAG-CGA,Variable O/H Cost,Hourly Labor,72-70-50205-2315
+CMAG-CGA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2315
+CMAG-CGA,Variable O/H Cost,Professional Services,72-70-50210-2315
+CMAG-CGA,Variable O/H Cost,Package,72-70-50217-2315
+CMAG-CGA,Variable O/H Cost,Waste Water,72-70-50223-2315
+CMAG-CGA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2315
+CMAG-CGA,Fixed O/H Cost,Depreciation,72-70-50207-2315
+CMAG-CGA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2315
+CMAG-CGA,Fixed O/H Cost,SUP-WELF,72-70-50215-2315
+CMAG-CGA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2315
+CMAG-CGA,Fixed O/H Cost,PPV-GEN,72-70-50304-2315
+CMAG-CGA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2315
+CMAG-CGA,Absorption Variance,CMAG-CGA,72-70-50321-2315
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Water,72-70-50200-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Steam,72-70-50202-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Electric,72-70-50203-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Hourly Labor,72-70-50205-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Professional Services,72-70-50210-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Package,72-70-50217-2317
+DPG/TSG/DSG/GA-CGA,Variable O/H Cost,Waste Water,72-70-50223-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,Depreciation,72-70-50207-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,SUP-WELF,72-70-50215-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,PPV-GEN,72-70-50304-2317
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2317
+DPG/TSG/DSG/GA-CGA,Absorption Variance,DPG/TST/DST/GA-CGA,72-70-50321-2317
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Water,72-70-50200-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Steam,72-70-50202-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Electric,72-70-50203-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Hourly Labor,72-70-50205-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Professional Services,72-70-50210-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Package,72-70-50217-2318
+DPG/TSG/DSG/GA-CMAG,Variable O/H Cost,Waste Water,72-70-50223-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Depreciation,72-70-50207-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,SUP-SALAR,72-70-50214-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,SUP-WELF,72-70-50215-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,PPV-GEN,72-70-50304-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2318
+DPG/TSG/DSG/GA-CMAG,Absorption Variance,DPG/TST/DST/GA-CMAG,72-70-50321-2318
+DRY BLEND,Variable O/H Cost,Water,55-00-50200-2040
+DRY BLEND,Variable O/H Cost,Steam,55-00-50202-2040
+DRY BLEND,Variable O/H Cost,Electric,55-00-50203-2040
+DRY BLEND,Variable O/H Cost,Hourly Labor,55-00-50205-2040
+DRY BLEND,Variable O/H Cost,Hourly Labor Benefit,55-00-50206-2040
+DRY BLEND,Variable O/H Cost,Professional Services,55-00-50210-2040
+DRY BLEND,Variable O/H Cost,Package,55-00-50217-2040
+DRY BLEND,Variable O/H Cost,Waste Water,55-00-50223-2040
+DRY BLEND,Fixed O/H Cost,Repair & Maintenance,55-00-50204-2040
+DRY BLEND,Fixed O/H Cost,Depreciation,55-00-50207-2040
+DRY BLEND,Fixed O/H Cost,SUP-SALAR,55-00-50214-2040
+DRY BLEND,Fixed O/H Cost,SUP-WELF,55-00-50215-2040
+DRY BLEND,Fixed O/H Cost,PRD-OFFIC,55-00-50222-2040
+DRY BLEND,Fixed O/H Cost,PPV-GEN,55-00-50304-2040
+DRY BLEND,Fixed O/H Cost,Inventory Adjustments,55-00-50318-2040
+DRY BLEND,Absorption Variance,DRY BLEND,55-00-71350000-2040
+DRY MIX,Variable O/H Cost,Water,72-70-50200-2325
+DRY MIX,Variable O/H Cost,Steam,72-70-50202-2325
+DRY MIX,Variable O/H Cost,Electric,72-70-50203-2325
+DRY MIX,Variable O/H Cost,Hourly Labor,72-70-50205-2325
+DRY MIX,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2325
+DRY MIX,Variable O/H Cost,Professional Services,72-70-50210-2325
+DRY MIX,Variable O/H Cost,Package,72-70-50217-2325
+DRY MIX,Variable O/H Cost,Waste Water,72-70-50223-2325
+DRY MIX,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2325
+DRY MIX,Fixed O/H Cost,Depreciation,72-70-50207-2325
+DRY MIX,Fixed O/H Cost,SUP-SALAR,72-70-50214-2325
+DRY MIX,Fixed O/H Cost,SUP-WELF,72-70-50215-2325
+DRY MIX,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2325
+DRY MIX,Fixed O/H Cost,PPV-GEN,72-70-50304-2325
+DRY MIX,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2325
+DRY MIX,Absorption Variance,DRY MIX,72-70-50321-2325
+EVD,Variable O/H Cost,Hourly Labor (Variable),55-00-62110000-
+EVD,Variable O/H Cost,Hourly Labor (Variable),55-00-64111000-
+EVD,Variable O/H Cost,Hourly Labor (Variable),55-00-64130100-
+EVD,Variable O/H Cost,Hourly Labor (Variable),55-00-64131100-
+EVD,Variable O/H Cost,Hourly Labor (Variable),55-00-64132100-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64120100-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64148000-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64148100-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64511000-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64511800-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64720000-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64740000-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-64750000-
+EVD,Variable O/H Cost,Hourly Labor Benefit,55-00-78173000-
+EVD,Variable O/H Cost,Gas,55-00-60221050-
+EVD,Variable O/H Cost,Gas,55-00-60221060-
+EVD,Variable O/H Cost,Electric,55-00-60612010-
+EVD,Variable O/H Cost,Water & Sewer,55-00-60611000-
+EVD,Variable O/H Cost,Water & Sewer,55-00-60611010-
+EVD,Variable O/H Cost,Steam,55-00-60221010-
+EVD,Fixed O/H Cost,Salaries,55-00-64112000-
+EVD,Fixed O/H Cost,Salaries,55-00-64130200-
+EVD,Fixed O/H Cost,Salaries,55-00-64131200-
+EVD,Fixed O/H Cost,Salaries,55-00-64132200-
+EVD,Fixed O/H Cost,Salaries,55-00-64132420-
+EVD,Fixed O/H Cost,Salary Benefits,55-00-64120200-
+EVD,Fixed O/H Cost,Salary Benefits,55-00-64512000-
+EVD,Fixed O/H Cost,Salary Benefits,55-00-64512800-
+EVD,Fixed O/H Cost,Rent,55-00-61325020-2025
+EVD,Fixed O/H Cost,Rent,55-00-61325040-2025
+EVD,Fixed O/H Cost,Rent,55-00-61325050-2025
+EVD,Fixed O/H Cost,Rent,55-00-61354091-
+EVD,Fixed O/H Cost,Rent,55-00-61325010-2025
+EVD,Fixed O/H Cost,Rent,55-00-61325040-
+EVD,Fixed O/H Cost,Guard Service,55-00-61110000-
+EVD,Fixed O/H Cost,Guard Service,55-00-62260300-
+EVD,Fixed O/H Cost,Guard Service,55-00-62280000-
+EVD,Fixed O/H Cost,Guard Service,55-00-62410000-
+EVD,Fixed O/H Cost,Guard Service,55-00-62481000-
+EVD,Fixed O/H Cost,Guard Service,55-00-68150000-
+EVD,Fixed O/H Cost,Guard Service,55-00-62281000-
+EVD,Fixed O/H Cost,Guard Service,55-00-61830000-
+EVD,Fixed O/H Cost,Guard Service,55-00-65400000-
+EVD,Fixed O/H Cost,Guard Service,55-00-78150000-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60212010-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60212091-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60212099-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60660000-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60680000-
+EVD,Fixed O/H Cost,Operating Supplies,55-00-60212090-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354000-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61520000-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61554000-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61558200-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354020-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354030-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354040-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354080-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354090-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354100-
+EVD,Fixed O/H Cost,Repair Material & Service,55-00-61354050-
+EVD,Fixed O/H Cost,Repair Labor Allocation,55-00-60630000-
+EVD,Fixed O/H Cost,Repair Labor Allocation,55-00-60630010-
+EVD,Fixed O/H Cost,Repair Labor Allocation,55-00-60630030-
+EVD,Fixed O/H Cost,Repair Labor Allocation,55-00-60650000-
+EVD,Fixed O/H Cost,Repair Labor Allocation,55-00-68173000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-61600000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63120000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63130000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63340000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63510001-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63510002-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63522000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63523000-
+EVD,Fixed O/H Cost,Property Tax & Insurance,55-00-63710000-
+EVD,Fixed O/H Cost,Depreciation,55-00-68110000-
+EVD,Direct Material Cost,Remelts RM,55-00-31201060-
+EVD,Direct Material Cost,Derivative RM,55-00-31301060-
+EVD,Direct Material Cost,Other RM (Remelts and Derivative),55-00-31701050-
+EVD,Direct Material Cost,Packaging (Remelts and Derivative),55-00-32601050-
+EVD,Direct Material Cost,Packaging (Remelts and Derivative),55-00-60260000-
+EVD,Direct Material Cost,Packaging (Remelts and Derivative),55-00-60326000-2060
+EVD,Direct Material Cost,Packaging (Remelts and Derivative),55-00-60326002-2060
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Water,72-70-50200-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Steam,72-70-50202-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Electric,72-70-50203-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor,72-70-50205-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Professional Services,72-70-50210-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Package,72-70-50217-2320
+FD-DPG/TSG/DSG/GA,Variable O/H Cost,Waste Water,72-70-50223-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Depreciation,72-70-50207-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-WELF,72-70-50215-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,PPV-GEN,72-70-50304-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2320
+FD-DPG/TSG/DSG/GA,Absorption Variance,FD-DPG/TSG/DSG/GA,72-70-50321-2320
+FD-GA-CA,Variable O/H Cost,Water,72-70-50200-2321
+FD-GA-CA,Variable O/H Cost,Steam,72-70-50202-2321
+FD-GA-CA,Variable O/H Cost,Electric,72-70-50203-2321
+FD-GA-CA,Variable O/H Cost,Hourly Labor,72-70-50205-2321
+FD-GA-CA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2321
+FD-GA-CA,Variable O/H Cost,Professional Services,72-70-50210-2321
+FD-GA-CA,Variable O/H Cost,Package,72-70-50217-2321
+FD-GA-CA,Variable O/H Cost,Waste Water,72-70-50223-2321
+FD-GA-CA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2321
+FD-GA-CA,Fixed O/H Cost,Depreciation,72-70-50207-2321
+FD-GA-CA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2321
+FD-GA-CA,Fixed O/H Cost,SUP-WELF,72-70-50215-2321
+FD-GA-CA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2321
+FD-GA-CA,Fixed O/H Cost,PPV-GEN,72-70-50304-2321
+FD-GA-CA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2321
+FD-GA-CA,Absorption Variance,FD-GA-CA,72-70-50321-2321
+FINISHED GOODS,Absorption Variance,FINISHED GOODS,30-10-5910-2128
+MAG-CMAG,Variable O/H Cost,Water,72-70-50200-2316
+MAG-CMAG,Variable O/H Cost,Steam,72-70-50202-2316
+MAG-CMAG,Variable O/H Cost,Electric,72-70-50203-2316
+MAG-CMAG,Variable O/H Cost,Hourly Labor,72-70-50205-2316
+MAG-CMAG,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2316
+MAG-CMAG,Variable O/H Cost,Professional Services,72-70-50210-2316
+MAG-CMAG,Variable O/H Cost,Package,72-70-50217-2316
+MAG-CMAG,Variable O/H Cost,Waste Water,72-70-50223-2316
+MAG-CMAG,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2316
+MAG-CMAG,Fixed O/H Cost,Depreciation,72-70-50207-2316
+MAG-CMAG,Fixed O/H Cost,SUP-SALAR,72-70-50214-2316
+MAG-CMAG,Fixed O/H Cost,SUP-WELF,72-70-50215-2316
+MAG-CMAG,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2316
+MAG-CMAG,Fixed O/H Cost,PPV-GEN,72-70-50304-2316
+MAG-CMAG,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2316
+MAG-CMAG,Absorption Variance,MAG-CMAG,72-70-50321-2316
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Water,72-70-50200-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Steam,72-70-50202-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Electric,72-70-50203-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor,72-70-50205-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Professional Services,72-70-50210-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Package,72-70-50217-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Waste Water,72-70-50223-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Depreciation,72-70-50207-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-WELF,72-70-50215-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,PPV-GEN,72-70-50304-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Absorption Variance,MAGNASWEET-MAG/DPG/TSG/DSG/GA,72-70-50321-2322
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Water,72-70-50200-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Steam,72-70-50202-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Electric,72-70-50203-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor,72-70-50205-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Professional Services,72-70-50210-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Package,72-70-50217-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Variable O/H Cost,Waste Water,72-70-50223-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Depreciation,72-70-50207-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-SALAR,72-70-50214-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,SUP-WELF,72-70-50215-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,PPV-GEN,72-70-50304-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Absorption Variance,MIXING-MAG/DPG/TSG/DSG/GA,72-70-50321-2329
+RICHMOND,Variable O/H Cost,Hourly Labor,30-20-6210-2626
+RICHMOND,Variable O/H Cost,Hourly Labor Benefit,30-20-6220-2626
+RICHMOND,Variable O/H Cost,Gas,30-20-6120-2626
+RICHMOND,Variable O/H Cost,Electric,30-20-6110-2626
+RICHMOND,Variable O/H Cost,Labor - Other,30-20-6211-2626
+RICHMOND,Variable O/H Cost,Water & Sewer,30-20-6090-2626
+RICHMOND,Variable O/H Cost,PPV-GEN (Mfg Variance vs Std COGS),30-20-5910-2626
+RICHMOND,Fixed O/H Cost,Rent - Operating Lease (ASC 842),30-20-6334-2626
+RICHMOND,Fixed O/H Cost,Salaries,30-20-6270-2626
+RICHMOND,Fixed O/H Cost,Professional Services,30-20-6380-2626
+RICHMOND,Fixed O/H Cost,Taxes & License,30-20-6350-2626
+RICHMOND,Fixed O/H Cost,Operating Supplies,30-20-6080-2626
+RICHMOND,Fixed O/H Cost,Repair Service,30-20-6160-2626
+RICHMOND,Fixed O/H Cost,Rent,30-20-6330-2626
+RICHMOND,Fixed O/H Cost,Salary Benefits,30-20-6280-2626
+RICHMOND,Fixed O/H Cost,Rent - Leased Property,30-20-6337-2626
+RICHMOND,Fixed O/H Cost,Repair Material,30-20-6150-2626
+RICHMOND,Fixed O/H Cost,Incentive Plan - Salary,30-20-6274-2626
+RICHMOND,Fixed O/H Cost,401K,30-20-8150-2626
+RICHMOND,Fixed O/H Cost,FICA,30-20-8010-2626
+RICHMOND,Fixed O/H Cost,Safety,30-20-6310-2626
+RICHMOND,Fixed O/H Cost,Incentive Plan - Hourly,30-20-6215-2626
+RICHMOND,Fixed O/H Cost,Vacation,30-20-8120-2626
+RICHMOND,Fixed O/H Cost,Freight In,30-20-6070-2626
+RICHMOND,Fixed O/H Cost,Package,30-20-5040-2626
+RICHMOND,Fixed O/H Cost,Stationery Supply,30-20-6440-2626
+RICHMOND,Fixed O/H Cost,Travel,30-20-6430-2626
+RICHMOND,Fixed O/H Cost,Other Expense,30-20-6390-2626
+RICHMOND,Fixed O/H Cost,Professional Services - IT,30-20-6383-2626
+RICHMOND,Fixed O/H Cost,Travel Non-Deductible,30-20-6370-2626
+RICHMOND,Fixed O/H Cost,FUTA,30-20-8020-2626
+RICHMOND,Absorption Variance,OTHERS,30-20-5910-2626
+RICHMOND,Direct Material Cost,Remelts,30-10-1350-
+RICHMOND,Direct Material Cost,Remelts,30-10-1360-2012
+RICHMOND,Direct Material Cost,Remelts,30-10-1360-2010
+RICHMOND,Direct Material Cost,Remelts,30-10-1360-2011
+RICHMOND,Direct Material Cost,Magnasweet,30-10-1342-2012
+RICHMOND,Direct Material Cost,Magnasweet,30-10-1342-2010
+REMELT BLEND,Absorption Variance,REMELT BLEND,30-10-5910-2106
+REPROCESS,Variable O/H Cost,Water,55-00-50200-2035
+REPROCESS,Variable O/H Cost,Steam,55-00-50202-2035
+REPROCESS,Variable O/H Cost,Electric,55-00-50203-2035
+REPROCESS,Variable O/H Cost,Hourly Labor,55-00-50205-2035
+REPROCESS,Variable O/H Cost,Hourly Labor Benefit,55-00-50206-2035
+REPROCESS,Variable O/H Cost,Professional Services,55-00-50210-2035
+REPROCESS,Variable O/H Cost,Package,55-00-50217-2035
+REPROCESS,Variable O/H Cost,Waste Water,55-00-50223-2035
+REPROCESS,Fixed O/H Cost,Repair & Maintenance,55-00-50204-2035
+REPROCESS,Fixed O/H Cost,Depreciation,55-00-50207-2035
+REPROCESS,Fixed O/H Cost,SUP-SALAR,55-00-50214-2035
+REPROCESS,Fixed O/H Cost,SUP-WELF,55-00-50215-2035
+REPROCESS,Fixed O/H Cost,PRD-OFFIC,55-00-50222-2035
+REPROCESS,Fixed O/H Cost,PPV-GEN,55-00-50304-2035
+REPROCESS,Fixed O/H Cost,Inventory Adjustments,55-00-50318-2035
+REPROCESS,Absorption Variance,REPROCESS,55-00-71350000-2035
+SEMI-FLUID,Variable O/H Cost,Water,55-00-50200-2048
+SEMI-FLUID,Variable O/H Cost,Steam,55-00-50202-2048
+SEMI-FLUID,Variable O/H Cost,Electric,55-00-50203-2048
+SEMI-FLUID,Variable O/H Cost,Hourly Labor,55-00-50205-2048
+SEMI-FLUID,Variable O/H Cost,Hourly Labor Benefit,55-00-50206-2048
+SEMI-FLUID,Variable O/H Cost,Professional Services,55-00-50210-2048
+SEMI-FLUID,Variable O/H Cost,Package,55-00-50217-2048
+SEMI-FLUID,Variable O/H Cost,Waste Water,55-00-50223-2048
+SEMI-FLUID,Fixed O/H Cost,Repair & Maintenance,55-00-50204-2048
+SEMI-FLUID,Fixed O/H Cost,Depreciation,55-00-50207-2048
+SEMI-FLUID,Fixed O/H Cost,SUP-SALAR,55-00-50214-2048
+SEMI-FLUID,Fixed O/H Cost,SUP-WELF,55-00-50215-2048
+SEMI-FLUID,Fixed O/H Cost,PRD-OFFIC,55-00-50222-2048
+SEMI-FLUID,Fixed O/H Cost,PPV-GEN,55-00-50304-2048
+SEMI-FLUID,Fixed O/H Cost,Inventory Adjustments,55-00-50318-2048
+SEMI-FLUID,Absorption Variance,SEMI-FLUID,55-00-71350000-2048
+SPRAY DRY,Variable O/H Cost,Water,55-00-50200-2025
+SPRAY DRY,Variable O/H Cost,Steam,55-00-50202-2025
+SPRAY DRY,Variable O/H Cost,Electric,55-00-50203-2025
+SPRAY DRY,Variable O/H Cost,Hourly Labor,55-00-50205-2025
+SPRAY DRY,Variable O/H Cost,Hourly Labor Benefit,55-00-50206-2025
+SPRAY DRY,Variable O/H Cost,Professional Services,55-00-50210-2025
+SPRAY DRY,Variable O/H Cost,Package,55-00-50217-2025
+SPRAY DRY,Variable O/H Cost,Waste Water,55-00-50223-2025
+SPRAY DRY,Fixed O/H Cost,Repair & Maintenance,55-00-50204-2025
+SPRAY DRY,Fixed O/H Cost,Depreciation,55-00-50207-2025
+SPRAY DRY,Fixed O/H Cost,SUP-SALAR,55-00-50214-2025
+SPRAY DRY,Fixed O/H Cost,SUP-WELF,55-00-50215-2025
+SPRAY DRY,Fixed O/H Cost,PRD-OFFIC,55-00-50222-2025
+SPRAY DRY,Fixed O/H Cost,PPV-GEN,55-00-50304-2025
+SPRAY DRY,Fixed O/H Cost,Inventory Adjustments,55-00-50318-2025
+SPRAY DRY,Absorption Variance,SPRAY DRY,55-00-71350000-2025
+WET MIX,Variable O/H Cost,Water,72-70-50200-2324
+WET MIX,Variable O/H Cost,Steam,72-70-50202-2324
+WET MIX,Variable O/H Cost,Electric,72-70-50203-2324
+WET MIX,Variable O/H Cost,Hourly Labor,72-70-50205-2324
+WET MIX,Variable O/H Cost,Hourly Labor Benefit,72-70-50206-2324
+WET MIX,Variable O/H Cost,Professional Services,72-70-50210-2324
+WET MIX,Variable O/H Cost,Package,72-70-50217-2324
+WET MIX,Variable O/H Cost,Waste Water,72-70-50223-2324
+WET MIX,Fixed O/H Cost,Repair & Maintenance,72-70-50204-2324
+WET MIX,Fixed O/H Cost,Depreciation,72-70-50207-2324
+WET MIX,Fixed O/H Cost,SUP-SALAR,72-70-50214-2324
+WET MIX,Fixed O/H Cost,SUP-WELF,72-70-50215-2324
+WET MIX,Fixed O/H Cost,PRD-OFFIC,72-70-50222-2324
+WET MIX,Fixed O/H Cost,PPV-GEN,72-70-50304-2324
+WET MIX,Fixed O/H Cost,Inventory Adjustments,72-70-50318-2324
+WET MIX,Absorption Variance,WET MIX,72-70-50321-2324
+CHINA,Direct Material Cost,Other RM Usage,72-70-12303-2011
+CHINA,Direct Material Cost,Packaging,72-70-12102-2011
+CHINA,Direct Material Cost,Licorice Extract Usage,72-70-12301-2011
+CHINA,Direct Material Cost,MAG Usage,72-70-12701-2011
+CHINA,Direct Material Cost,Chemical Usage,72-70-12104-2011
+CHINA,Direct Material Cost,Licorice Extract FG Usage,72-70-12702-2011
+CHINA,Direct Material Cost,CMAG Usage,72-70-12304-2011
+CHINA,Direct Material Cost,GYE/R21 Usage,72-70-12703-2011
+CHINA,Direct Material Cost,WIP Usage,72-70-12501-2011
+AG-CAKE,Fixed O/H Cost,Safety Expense,72-70-50221-2314
+AG-CAKE,Fixed O/H Cost,Storage Expense,72-70-50208-2314
+AG-CAKE,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2314
+AG-CAKE,Fixed O/H Cost,Lab Expense,72-70-50224-2314
+AG-MM300,Fixed O/H Cost,Safety Expense,72-70-50221-2332
+AG-MM300,Fixed O/H Cost,Storage Expense,72-70-50208-2332
+AG-MM300,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2332
+AG-MM300,Fixed O/H Cost,Lab Expense,72-70-50224-2332
+CMAG-CGA,Fixed O/H Cost,Safety Expense,72-70-50221-2315
+CMAG-CGA,Fixed O/H Cost,Storage Expense,72-70-50208-2315
+CMAG-CGA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2315
+CMAG-CGA,Fixed O/H Cost,Lab Expense,72-70-50224-2315
+DPG/TSG/DSG/GA-CGA,Fixed O/H Cost,Safety Expense,72-70-50221-2317
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Safety Expense,72-70-50221-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Storage Expense,72-70-50208-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2318
+DPG/TSG/DSG/GA-CMAG,Fixed O/H Cost,Lab Expense,72-70-50224-2318
+DRY MIX,Fixed O/H Cost,Safety Expense,72-70-50221-2325
+DRY MIX,Fixed O/H Cost,Storage Expense,72-70-50208-2325
+DRY MIX,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2325
+DRY MIX,Fixed O/H Cost,Lab Expense,72-70-50224-2325
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Safety Expense,72-70-50221-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Storage Expense,72-70-50208-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2320
+FD-DPG/TSG/DSG/GA,Fixed O/H Cost,Lab Expense,72-70-50224-2320
+FD-GA-CA,Fixed O/H Cost,Safety Expense,72-70-50221-2321
+FD-GA-CA,Fixed O/H Cost,Storage Expense,72-70-50208-2321
+FD-GA-CA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2321
+FD-GA-CA,Fixed O/H Cost,Lab Expense,72-70-50224-2321
+MAG-CMAG,Fixed O/H Cost,Safety Expense,72-70-50221-2316
+MAG-CMAG,Fixed O/H Cost,Storage Expense,72-70-50208-2316
+MAG-CMAG,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2316
+MAG-CMAG,Fixed O/H Cost,Lab Expense,72-70-50224-2316
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Safety Expense,72-70-50221-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Storage Expense,72-70-50208-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2322
+MAGNASWEET-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Lab Expense,72-70-50224-2322
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Safety Expense,72-70-50221-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Storage Expense,72-70-50208-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2329
+MIXING-MAG/DPG/TSG/DSG/GA,Fixed O/H Cost,Lab Expense,72-70-50224-2329
+WET MIX,Fixed O/H Cost,Safety Expense,72-70-50221-2324
+WET MIX,Fixed O/H Cost,Storage Expense,72-70-50208-2324
+WET MIX,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2324
+WET MIX,Fixed O/H Cost,Lab Expense,72-70-50224-2324
+CHINA,Fixed O/H Cost,Safety Expense,72-70-50221-2307
+CHINA,Fixed O/H Cost,Safety Expense,72-70-50221-2308
+CHINA,Fixed O/H Cost,Safety Expense,72-70-50221-2309
+CHINA,Fixed O/H Cost,Safety Expense,72-70-50221-2310
+CHINA,Fixed O/H Cost,Storage Expense,72-70-50208-2307
+CHINA,Fixed O/H Cost,Storage Expense,72-70-50208-2308
+CHINA,Fixed O/H Cost,Storage Expense,72-70-50208-2309
+CHINA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2307
+CHINA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2308
+CHINA,Fixed O/H Cost,Professional Services - Testing,72-70-50211-2309
+CHINA,Fixed O/H Cost,Lab Expense,72-70-50224-2307
+CHINA,Fixed O/H Cost,Lab Expense,72-70-50224-2308
+CHINA,Fixed O/H Cost,Lab Expense,72-70-50224-2309
+CHINA,Fixed O/H Cost,Lab Expense,72-70-50224-2310
