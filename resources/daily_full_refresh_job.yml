@@ -17,8 +17,15 @@ resources:
              "REMARKS", "SUPPNAME"]
 
       tasks:
-        # ---- Task 1: load all 32 bronze tables in parallel ----
+        # ---- Task 1: trigger the ADF pipeline in the old tenant, wait for it ----
+        - task_key: trigger_adf
+          notebook_task:
+            notebook_path: ../src/trigger_adf_pipeline.py
+
+        # ---- Task 2: load all 32 bronze tables in parallel, after ADF finishes ----
         - task_key: load_bronze
+          depends_on:
+            - task_key: trigger_adf
           for_each_task:
             inputs: "{{job.parameters.table_names}}"
             concurrency: 6
@@ -30,7 +37,7 @@ resources:
                   catalog: ${var.catalog}
                   table_name: "{{input}}"
 
-        # ---- Task 2: run dbt, but only after ALL bronze loads succeed ----
+        # ---- Task 3: run dbt, but only after ALL bronze loads succeed ----
         - task_key: dbt_refresh
           depends_on:
             - task_key: load_bronze
