@@ -67,13 +67,15 @@ resources:
             dependencies:
               - dbt-databricks
 
-      # Runs once daily at 6am UTC -- adjust to match when your source files
-      # are reliably done landing for the day.
+      # Runs daily at 8am America/New_York -- using an IANA timezone name
+      # rather than a fixed UTC offset means Databricks automatically
+      # accounts for EST/EDT daylight saving shifts, so it stays 8am local
+      # year-round instead of drifting an hour twice a year.
       schedule:
-        quartz_cron_expression: "0 0 6 * * ?"
-        timezone_id: "UTC"
-        pause_status: PAUSED   # unpause once you've verified a manual run succeeds end-to-end
-
+        quartz_cron_expression: "0 0 8 * * ?"
+        timezone_id: "America/New_York"
+        pause_status: UNPAUSED   # unpause once you've verified a manual run succeeds end-to-end
+ 
       email_notifications:
         on_failure:
           - jhuang@mafcolicorice.com
