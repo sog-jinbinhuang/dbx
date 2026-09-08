@@ -827,32 +827,5 @@ def main() -> None:
     print(f"Tabs:  {[ws.title for ws in wb.worksheets]}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data, builds the workbook in memory, returns [(filename, bytes)]."""
-    import io
-
-    loader = Loader()
-    try:
-        vc_df = loader.load_volume_cost()
-        opex_df = loader.load_opex()
-    finally:
-        loader.close()
-
-    wb = Workbook()
-    wb.remove(wb.active)
-    for entity in ENTITIES:
-        build_entity_tab(wb, entity, vc_df, opex_df)
-
-    buf = io.BytesIO()
-    wb.save(buf)
-    buf.seek(0)
-
-    return [(f"production_report_{_DATE_SUFFIX}.xlsx", buf.getvalue())]
-
-
 if __name__ == "__main__":
     main()

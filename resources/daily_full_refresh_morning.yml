@@ -1,0 +1,101 @@
+resources:
+  jobs:
+    daily_full_refresh_morning:
+      name: daily_full_refresh_morning
+
+      parameters:
+        - name: table_names
+          default: >-
+            ["PRODUCT", "APINVHDR", "AROPEN", "AUDIT_ORDER", "BATCH_HDR",
+             "BATCH_REC_HDR", "BATCH_REC_OUTPUT", "BATCH_REC_TRL",
+             "BATCH_REC_TRL_WHS_LOT_LOC", "COUNTRY", "CUST_PROD_PRICE",
+             "CUST_PRODUCT", "FREE_FIELD_DATA", "GL_ACCTS", "GL_DATA",
+             "GL_ENTRY_HEADER", "GL_ENTRY_TRAILER", "GL_EXCH_RATE",
+             "INV_TRANSACT", "CUST", "INVOICE_HDR", "INVOICE_TRL",
+             "ORDER_HDR", "ORDER_TRL", "WHS_PROD_PKG", "LOT", "PACKAGING",
+             "PROD_PKG", "PROD_PKG_WHS_LOT", "PROD_PKG_WHS_LOT_LOC",
+             "REMARKS", "SUPPNAME"]
+
+      tasks:
+        # ---- Task 1: trigger the ADF pipeline in the old tenant, wait for it ----
+        - task_key: trigger_adf
+          notebook_task:
+            notebook_path: ../src/trigger_adf_pipeline.py
+
+        # ---- Task 2: load all 32 bronze tables in parallel, after ADF finishes ----
+        - task_key: load_bronze
+          depends_on:
+            - task_key: trigger_adf
+          for_each_task:
+            inputs: "{{job.parameters.table_names}}"
+            concurrency: 6
+            task:
+              task_key: load_one_table
+              notebook_task:
+                notebook_path: ../src/load_bronze.py
+                base_parameters:
+                  catalog: ${var.catalog}
+                  table_name: "{{input}}"
+
+        # ---- Task 3: run dbt, but only after ALL bronze loads succeed ----
+        - task_key: dbt_refresh
+          depends_on:
+            - task_key: load_bronze
+          environment_key: dbt_serverless_env
+          dbt_task:
+            project_directory: ../dbt/mafco_analytics
+            # Databricks' dbt_task auto-generates its own connection profile at
+            # runtime, always named target 'databricks_cluster' -- it does NOT
+            # expose the bundle's dev/prod target name to dbt. So we pass the
+            # bundle target through as a dbt var instead, which dbt_project.yml
+            # reads via var('env') to pick prod_hr vs dev_hr for the hr models.
+            commands:
+              - "dbt seed --vars '{\"env\": \"${bundle.target}\"}'"
+              - "dbt run --vars '{\"env\": \"${bundle.target}\"}'"
+            catalog: ${var.catalog}
+            schema: default
+            warehouse_id: a702d1b52888138c   # sql-wh-analytics-prod-01
+
+        # ---- Task 4: send the morning reports (AR/AP), chained right after dbt ----
+        # Since this is a task dependency (not a separate schedule), the send
+        # fires the moment dbt_refresh finishes -- not at a fixed clock time.
+        # The job's own schedule below is tuned to start early enough that
+        # this reliably lands before the morning is over.
+        - task_key: send_morning_reports
+          depends_on:
+            - task_key: dbt_refresh
+          environment_key: reports_env
+          notebook_task:
+            notebook_path: ../reports/send_reports.py
+            base_parameters:
+              frequency_group: morning
+
+      environments:
+        # Serverless environment for tasks that require an explicit compute
+        # reference (dbt_task doesn't auto-default to serverless the way
+        # notebook_task does). dbt-databricks is required here -- without it,
+        # the environment has no `dbt` command at all (exit code 127).
+        - environment_key: dbt_serverless_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - dbt-databricks
+        - environment_key: reports_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - databricks-sql-connector
+              - openpyxl
+
+      # Starts at 6am America/New_York -- early enough that the full
+      # ADF -> bronze -> dbt -> send_morning_reports chain reliably finishes
+      # before the morning reports need to be out. Adjust earlier if the
+      # chain regularly runs long.
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: "America/New_York"
+        pause_status: PAUSED   # unpause once you've verified a manual run succeeds end-to-end
+
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com

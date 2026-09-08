@@ -660,6 +660,34 @@ def build_report(df: pd.DataFrame, _orders_df: Any, config: _ReportConfig) -> No
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def build_attachments() -> list[tuple[str, bytes]]:
+    """Loads data, builds the workbook in memory, returns [(filename, bytes)].
+    This is the one standard function every rpt_*.py exposes -- everything
+    else in this file (Loader, ARReportBuilder, build_report(), OUTPUT_FILE)
+    stays exactly as it was; this is just a thin wrapper around it."""
+    import io
+
+    loader = Loader()
+    try:
+        df = loader.load()
+    finally:
+        loader.close()
+
+    buf = io.BytesIO()
+    wb = Workbook()
+    wb.remove(wb.active)
+    builder = ARReportBuilder(wb, df)
+    builder.build()
+    wb.save(buf)
+    buf.seek(0)
+
+    return [(f"ar_report_{_DATE_SUFFIX}.xlsx", buf.getvalue())]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 

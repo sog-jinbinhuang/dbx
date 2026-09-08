@@ -663,31 +663,6 @@ def build_report(df: pd.DataFrame, _orders_df: Any, config: _ReportConfig) -> No
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data, builds the workbook in memory, returns [(filename, bytes)]."""
-    import io
-
-    loader = Loader()
-    try:
-        df = loader.load()
-    finally:
-        loader.close()
-
-    buf = io.BytesIO()
-    wb = Workbook()
-    wb.remove(wb.active)
-    builder = APReportBuilder(wb, df)
-    builder.build()
-    wb.save(buf)
-    buf.seek(0)
-
-    return [(f"ap_report_{_DATE_SUFFIX}.xlsx", buf.getvalue())]
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 

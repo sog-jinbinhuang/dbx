@@ -1,0 +1,73 @@
+resources:
+  jobs:
+    report_send_morning:
+      name: report_send_morning
+      tasks:
+        - task_key: send_morning_reports
+          environment_key: reports_env
+          notebook_task:
+            notebook_path: ../reports/send_reports.py
+            base_parameters:
+              frequency_group: morning
+      environments:
+        - environment_key: reports_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - databricks-sql-connector
+              - openpyxl
+      schedule:
+        quartz_cron_expression: "0 0 7 * * ?"   # 7am America/New_York
+        timezone_id: "America/New_York"
+        pause_status: PAUSED
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com
+
+    report_send_afternoon:
+      name: report_send_afternoon
+      tasks:
+        - task_key: send_afternoon_reports
+          environment_key: reports_env
+          notebook_task:
+            notebook_path: ../reports/send_reports.py
+            base_parameters:
+              frequency_group: afternoon
+      environments:
+        - environment_key: reports_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - databricks-sql-connector
+              - openpyxl
+      schedule:
+        quartz_cron_expression: "0 0 14 * * ?"   # 2pm America/New_York
+        timezone_id: "America/New_York"
+        pause_status: PAUSED
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com
+
+    report_send_weekly:
+      name: report_send_weekly
+      tasks:
+        - task_key: send_weekly_reports
+          environment_key: reports_env
+          notebook_task:
+            notebook_path: ../reports/send_reports.py
+            base_parameters:
+              frequency_group: weekly
+      environments:
+        - environment_key: reports_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - databricks-sql-connector
+              - openpyxl
+      schedule:
+        quartz_cron_expression: "0 0 7 ? * MON"   # 7am America/New_York, Mondays
+        timezone_id: "America/New_York"
+        pause_status: PAUSED
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com

@@ -1101,39 +1101,5 @@ def main() -> None:
     print(f"\nCY={CY}  PY={PY}  Month={CUR_MONTH}  Q{CUR_QUARTER}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data ONCE, builds BOTH the segment and sales-rep workbooks from
-    it, returns both as attachments -- matches the original report_emailer.py
-    design (one 'Executive team' email with two attachments), and avoids
-    re-querying FCT_GLOBAL_BACKLOG twice."""
-    import copy
-    import io
-
-    loader = Loader()
-    try:
-        df        = loader.load()
-        orders_df = loader.load_new_orders()
-    finally:
-        loader.close()
-
-    attachments: list[tuple[str, bytes]] = []
-    for config_template, filename in [
-        (SEGMENT_CONFIG, f"sales_report_by_product_segment_{_DATE_SUFFIX}.xlsx"),
-        (REP_CONFIG, f"sales_report_by_sales_rep_{_DATE_SUFFIX}.xlsx"),
-    ]:
-        buf = io.BytesIO()
-        config = copy.copy(config_template)
-        config.output_file = buf
-        build_report(df, orders_df, config)
-        buf.seek(0)
-        attachments.append((filename, buf.getvalue()))
-
-    return attachments
-
-
 if __name__ == "__main__":
     main()

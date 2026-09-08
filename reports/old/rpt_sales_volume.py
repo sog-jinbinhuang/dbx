@@ -525,68 +525,6 @@ def write_detail_tab(wb: WorkbookType, sheet_name: str, title: str, subtitle: st
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data, builds the workbook in memory, returns [(filename, bytes)]."""
-    import io
-
-    loader = Loader()
-    try:
-        df = loader.load()
-    finally:
-        loader.close()
-
-    months = build_month_index()
-    actual_all = build_product_pivot(df[~df["_IS_OPEN"]], months)
-    open_all = build_product_pivot(df[df["_IS_OPEN"]], None)
-    summary_df = build_summary(actual_all, open_all)
-    open_periods_all = (
-        [c for c in open_all.columns if c != "_TOTAL"] if not open_all.empty else []
-    )
-
-    wb = Workbook()
-    wb.remove(wb.active)
-    write_summary_tab(wb, summary_df, months, open_periods_all)
-
-    databases = sorted(d for d in df["DATABASE"].unique() if d)
-    for db in databases:
-        db_df = df[df["DATABASE"] == db]
-
-        actual_detail = build_detail_pivot(db_df[~db_df["_IS_OPEN"]], months)
-        write_detail_tab(
-            wb, safe_sheet_name(db, " ACTUAL"),
-            f"{db} \u2014 Actual Volume by Product  |  {TODAY.strftime('%B %d, %Y')}",
-            f"Shipped/booked volume in kg by product & customer, "
-            f"{period_label(months[0])} - {period_label(months[-1])}",
-            actual_detail,
-        )
-
-        open_detail = build_detail_pivot(db_df[db_df["_IS_OPEN"]], None)
-        open_periods_db = (
-            [c for c in open_detail.columns if c != "_TOTAL"] if not open_detail.empty else []
-        )
-        open_subtitle = "Not-yet-shipped order volume in kg by product & customer"
-        if open_periods_db:
-            open_subtitle += (
-                f", {period_label(open_periods_db[0])} - {period_label(open_periods_db[-1])}"
-            )
-        write_detail_tab(
-            wb, safe_sheet_name(db, " OPEN"),
-            f"{db} \u2014 Open Orders by Product  |  {TODAY.strftime('%B %d, %Y')}",
-            open_subtitle,
-            open_detail,
-        )
-
-    buf = io.BytesIO()
-    wb.save(buf)
-    buf.seek(0)
-
-    return [(f"production_volume_report_{_DATE_SUFFIX}.xlsx", buf.getvalue())]
-
-
 def main() -> None:
     loader = Loader()
     try:

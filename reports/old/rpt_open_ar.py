@@ -1,16 +1,16 @@
 """
-ap_report.py
+ar_report.py
 ============
-Reads from FCT_GLOBAL_OPEN_AP and renders an Excel AP aging workbook.
+Reads from FCT_GLOBAL_OPEN_AR and renders an Excel AR aging workbook.
 
 Tabs produced
 -------------
   SUMMARY        — one row per database, columns by aging bucket (USD), plus
                    a second table below showing each bucket as % of total open
-  <DATABASE>     — one tab per source database, sorted most overdue first
+  <DATABASE>     — one tab per source database, sorted days overdue desc→asc
   EXCHANGE RATES — spot rates used for USD conversion
 
-Run standalone:  python ap_report.py
+Run standalone:  python ar_report.py
 Used by:         reports/utils/finance_emailer.py
 
 Requires env vars:
@@ -51,52 +51,50 @@ DBX_SCHEMA  = "gold_finance"
 
 TODAY        = date.today()
 _DATE_SUFFIX = TODAY.strftime("%m%d%Y")
-OUTPUT_FILE  = os.path.join(_DIR, f"ap_report_{_DATE_SUFFIX}.xlsx")
+OUTPUT_FILE  = os.path.join(_DIR, f"ar_report_{_DATE_SUFFIX}.xlsx")
 
 AGING_BUCKETS = [
-    "DUE IN > 30 DAYS",
-    "DUE IN <= 30 DAYS",
-    "PAST DUE 0 TO 30 DAYS",
-    "PAST DUE 31 TO 60 DAYS",
-    "PAST DUE 61 TO 90 DAYS",
-    "PAST DUE > 90 DAYS",
+    "Due > 30 D",
+    "Due < 30 D",
+    "PD 0 to 30 D",
+    "PD 31 to 60 D",
+    "PD 61 to 90 D",
+    "PD > 90 D",
 ]
 
 AGING_LABELS: dict[str, str] = {
-    "DUE IN > 30 DAYS":      "Not Due\n(> 30 Days)",
-    "DUE IN <= 30 DAYS":     "Not Due\n(<= 30 Days)",
-    "PAST DUE 0 TO 30 DAYS": "Past Due\n(0 – 30 Days)",
-    "PAST DUE 31 TO 60 DAYS":"Past Due\n(31 – 60 Days)",
-    "PAST DUE 61 TO 90 DAYS":"Past Due\n(61 – 90 Days)",
-    "PAST DUE > 90 DAYS":    "Past Due\n(> 90 Days)",
+    "Due > 30 D":    "Not Due\n(> 30 Days)",
+    "Due < 30 D":    "Not Due\n(<= 30 Days)",
+    "PD 0 to 30 D":  "Past Due\n(0 – 30 Days)",
+    "PD 31 to 60 D": "Past Due\n(31 – 60 Days)",
+    "PD 61 to 90 D": "Past Due\n(61 – 90 Days)",
+    "PD > 90 D":     "Past Due\n(> 90 Days)",
 }
 
 DETAIL_COLS: list[tuple[str, int, str, str, str]] = [
-    ("Supplier Code",         13, "SUPPLIER_CODE",             "@",                  "center"),
-    ("Supplier",              30, "SUPPLIER_NAME",              "@",                  "left"),
-    ("Voucher Type",          12, "VOUCHER_TYPE",               "@",                  "center"),
-    ("Voucher #",             13, "VOUCHER_NUMBER",             "@",                  "center"),
-    ("Reference #",           13, "REFERENCE_NUMBER",           "@",                  "center"),
-    ("PO Number",             13, "PO_NUMBER",                  "@",                  "center"),
-    ("Invoice Date",          12, "INVOICE_DATE",               "MM/DD/YYYY",          "center"),
-    ("Due Date",              12, "DUE_DATE",                   "MM/DD/YYYY",          "center"),
-    ("Days Until Due",        13, "OPEN_DAYS",                  "#,##0;-#,##0",        "center"),
-    ("Aging",                 18, "OPEN_GROUP_LABEL",           "@",                  "center"),
-    ("Status",                10, "INV_STATUS",                 "@",                  "center"),
-    ("Orig Amount\n(Local)",  16, "AMOUNT_LOCAL_CURRENCY",      "#,##0.00;-#,##0.00", "right"),
-    ("Open Amount\n(Local)",  16, "OPEN_AMOUNT_LOCAL_CURRENCY", "#,##0.00;-#,##0.00", "right"),
-    ("Open Amount\n(USD)",    16, "OPEN_AMOUNT_IN_USD",         "#,##0.00;-#,##0.00", "right"),
+    ("Cust Code",             10, "CUST_CODE",                  "@",                  "center"),
+    ("Customer",              30, "CUST_NAME",                   "@",                  "left"),
+    ("Sales Agent",           16, "DEFAULT_SALES_AGENT_2",     "@",                  "center"),
+    ("Ref Type",               9, "REF_TYPE",                    "@",                  "center"),
+    ("Ref #",                 12, "REF_NUM",                     "@",                  "center"),
+    ("Ref Date",              12, "REF_DATE",                    "MM/DD/YYYY",          "center"),
+    ("Due Date",              12, "DUE_DATE",                    "MM/DD/YYYY",          "center"),
+    ("Days Overdue",          12, "DAYS_OVERDUE",                "#,##0;-#,##0",        "center"),
+    ("Aging",                 18, "OPEN_GROUP_LABEL",            "@",                  "center"),
+    ("Orig Amount\n(Local)",  16, "AMOUNT_LOCAL_CURRENCY",       "#,##0.00;-#,##0.00", "right"),
+    ("Open Amount\n(Local)",  16, "OPEN_AMOUNT_LOCAL_CURRENCY",  "#,##0.00;-#,##0.00", "right"),
+    ("Open Amount\n(USD)",    16, "OPEN_AMOUNT_IN_USD",          "#,##0.00;-#,##0.00", "right"),
 ]
 
 NUM_USD = "#,##0;-#,##0;\"-\""
 
 BUCKET_STYLE: dict[str, tuple[str, bool]] = {
-    "DUE IN > 30 DAYS":      ("808080", False),
-    "DUE IN <= 30 DAYS":     ("595959", False),
-    "PAST DUE 0 TO 30 DAYS": ("BF8F00", False),
-    "PAST DUE 31 TO 60 DAYS":("C55A11", False),
-    "PAST DUE 61 TO 90 DAYS":("C00000", True),
-    "PAST DUE > 90 DAYS":    ("7B0000", True),
+    "Due > 30 D":    ("808080", False),
+    "Due < 30 D":    ("595959", False),
+    "PD 0 to 30 D":  ("BF8F00", False),
+    "PD 31 to 60 D": ("C55A11", False),
+    "PD 61 to 90 D": ("C00000", True),
+    "PD > 90 D":     ("7B0000", True),
 }
 
 # ── emailer compatibility ──────────────────────────────────────────────────────
@@ -105,7 +103,7 @@ BUCKET_STYLE: dict[str, tuple[str, bool]] = {
 class _ReportConfig:
     output_file: str | Path | io.IOBase
 
-AP_CONFIG = _ReportConfig(output_file=OUTPUT_FILE)
+AR_CONFIG = _ReportConfig(output_file=OUTPUT_FILE)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -167,9 +165,9 @@ class Loader:
         print("  Databricks connection closed.")
 
     def load(self) -> pd.DataFrame:
-        print("  Loading FCT_GLOBAL_OPEN_AP ...")
+        print("  Loading FCT_GLOBAL_OPEN_AR ...")
         cur = self._conn.cursor()
-        cur.execute("SELECT * FROM FCT_GLOBAL_OPEN_AP")
+        cur.execute("SELECT * FROM FCT_GLOBAL_OPEN_AR")
         cols = [d[0].upper() for d in cur.description]
         rows = cur.fetchall()
         cur.close()
@@ -179,19 +177,18 @@ class Loader:
         numeric_cols = ["AMT", "OP_AMT", "ENT_CURRENCY_CONVERSION_RATE",
                         "AMOUNT_LOCAL_CURRENCY", "OPEN_AMOUNT_LOCAL_CURRENCY",
                         "LATEST_X_RATE", "AMOUNT_IN_USD", "OPEN_AMOUNT_IN_USD",
-                        "OPEN_DAYS"]
+                        "DAYS_OVERDUE"]
         for col in numeric_cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-        for col in ["INVOICE_DATE", "DUE_DATE"]:
+        for col in ["REF_DATE", "DUE_DATE"]:
             if col in df.columns:
                 df[col] = pd.to_datetime(df[col], errors="coerce")
 
-        str_cols = ["DATABASE", "DIVISION", "COMPANY", "SUPPLIER_CODE", "SUPPLIER_NAME",
-                    "VOUCHER_TYPE", "VOUCHER_NUMBER", "REFERENCE_NUMBER", "PO_NUMBER",
-                    "INV_STATUS", "ENTERED_CURRENCY", "LOCAL_CURRENCY", "OPEN_GROUP",
-                    "GL_ACCT"]
+        str_cols = ["DATABASE", "DIVISION", "COMPANY", "CUST_CODE", "CUST_NAME", "DEFAULT_SALES_AGENT_2",
+                    "REF_TYPE", "REF_NUM", "LOCAL_CURRENCY_LABEL",
+                    "ENTERED_CURRENCY", "OPEN_GROUP", "GL_ACCT"]
         for col in str_cols:
             if col in df.columns:
                 df[col] = (df[col].astype(str).str.strip()
@@ -201,7 +198,7 @@ class Loader:
             {k: v.replace("\n", " ") for k, v in AGING_LABELS.items()}
         ).fillna(df["OPEN_GROUP"])
 
-        df = df.sort_values("OPEN_DAYS", ascending=True).reset_index(drop=True)
+        df = df.sort_values("DAYS_OVERDUE", ascending=False).reset_index(drop=True)
         return df
 
     def load_new_orders(self):
@@ -213,7 +210,7 @@ class Loader:
 # REPORT BUILDER
 # ═══════════════════════════════════════════════════════════════════════════════
 
-class APReportBuilder:
+class ARReportBuilder:
 
     def __init__(self, wb: Workbook, df: pd.DataFrame) -> None:
         self.wb = wb
@@ -265,8 +262,8 @@ class APReportBuilder:
 
         self._title_banner(
             ws, TOTAL_COLS,
-            f"Mafco Open AP Summary  |  {TODAY.strftime('%B %d, %Y')}",
-            "Open amounts in USD  |  Excludes intercompany payables",
+            f"Mafco Open AR Summary  |  {TODAY.strftime('%B %d, %Y')}",
+            "Open amounts in USD  |  Excludes intercompany balances",
         )
 
         # ── USD TABLE ─────────────────────────────────────────────────────────
@@ -317,7 +314,7 @@ class APReportBuilder:
             }
             total_open  = sum(bucket_totals.values())
             pd_total    = sum(bucket_totals[b] for b in AGING_BUCKETS
-                              if b.startswith("PAST DUE"))
+                              if b.startswith("PD"))
             pct_overdue = pd_total / total_open if total_open else None
             row_bg      = S.ALT_BG if di % 2 == 1 else S.EVEN_BG
 
@@ -355,7 +352,7 @@ class APReportBuilder:
                                  right=cell.border.right, bottom=S.OUTER)
 
         gt_row = cur_row
-        gt_pd  = sum(grand_buckets[b] for b in AGING_BUCKETS if b.startswith("PAST DUE"))
+        gt_pd  = sum(grand_buckets[b] for b in AGING_BUCKETS if b.startswith("PD"))
         gt_pct = gt_pd / grand_total if grand_total else None
 
         self._sc(ws, gt_row, COL_DB, "Grand Total", bold=True,
@@ -422,7 +419,7 @@ class APReportBuilder:
             bucket_totals = db_bucket_totals[db]
             total_open    = db_totals[db]
             pd_total      = sum(bucket_totals[b] for b in AGING_BUCKETS
-                                if b.startswith("PAST DUE"))
+                                if b.startswith("PD"))
             pct_overdue   = pd_total / total_open if total_open else None
             row_bg        = S.ALT_BG if di % 2 == 1 else S.EVEN_BG
 
@@ -482,7 +479,7 @@ class APReportBuilder:
         ws.column_dimensions[get_column_letter(COL_PCT)].width   = 12
 
         ws.freeze_panes = "A5"
-        print(f"  Summary: {len(databases)} databases | Total Open AP ${grand_total:,.0f}")
+        print(f"  Summary: {len(databases)} databases | Total Open AR ${grand_total:,.0f}")
 
     # ── DETAIL tab ────────────────────────────────────────────────────────────
 
@@ -502,19 +499,19 @@ class APReportBuilder:
     def _write_detail_rows(self, ws: Worksheet,
                            rows: pd.DataFrame, start_row: int) -> int:
         cur         = start_row
-        signal_keys = {"OPEN_DAYS", "OPEN_GROUP_LABEL"}
+        signal_keys = {"DAYS_OVERDUE", "OPEN_GROUP_LABEL"}
 
         for row_idx, (_, row_data) in enumerate(rows.iterrows()):
-            bucket              = str(row_data.get("OPEN_GROUP", ""))
+            bucket             = str(row_data.get("OPEN_GROUP", ""))
             sig_color, sig_bold = BUCKET_STYLE.get(bucket, ("000000", False))
-            bg_hex              = S.ALT_BG if row_idx % 2 == 1 else S.EVEN_BG
+            bg_hex             = S.ALT_BG if row_idx % 2 == 1 else S.EVEN_BG
 
             ws.row_dimensions[cur].height = 15
             for ci, (_, _, data_key, num_fmt, halign) in enumerate(DETAIL_COLS, start=1):
                 val = row_data.get(data_key, "")
-                if data_key in ("INVOICE_DATE", "DUE_DATE"):
+                if data_key in ("REF_DATE", "DUE_DATE"):
                     val = val.date() if pd.notna(val) and hasattr(val, "date") else None
-                elif data_key == "OPEN_DAYS":
+                elif data_key == "DAYS_OVERDUE":
                     val = int(val) if pd.notna(val) else None
 
                 is_signal = data_key in signal_keys
@@ -556,7 +553,7 @@ class APReportBuilder:
 
         self._write_detail_headers(
             ws, N, title,
-            f"{len(df):,} open vouchers  |  As of {TODAY.strftime('%B %d, %Y')}",
+            f"{len(df):,} open items  |  As of {TODAY.strftime('%B %d, %Y')}",
         )
 
         cur_row   = 4
@@ -643,7 +640,7 @@ class APReportBuilder:
             self.build_detail_tab(
                 df         = db_df,
                 sheet_name = safe,
-                title      = f"Mafco Open AP  |  {db}  |  {TODAY.strftime('%B %d, %Y')}",
+                title      = f"Mafco Open AR  |  {db}  |  {TODAY.strftime('%B %d, %Y')}",
             )
 
         self.build_exchange_rates_tab()
@@ -654,37 +651,12 @@ class APReportBuilder:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def build_report(df: pd.DataFrame, _orders_df: Any, config: _ReportConfig) -> None:
-    """Called by finance_emailer.py. _orders_df is unused (AP has no orders)."""
+    """Called by finance_emailer.py. _orders_df is unused (AR has no orders)."""
     wb = Workbook()
     wb.remove(wb.active)
-    builder = APReportBuilder(wb, df)
+    builder = ARReportBuilder(wb, df)
     builder.build()
     wb.save(config.output_file)
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# STANDARD ENTRY POINT (used by report_registry.py / send_reports.py)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data, builds the workbook in memory, returns [(filename, bytes)]."""
-    import io
-
-    loader = Loader()
-    try:
-        df = loader.load()
-    finally:
-        loader.close()
-
-    buf = io.BytesIO()
-    wb = Workbook()
-    wb.remove(wb.active)
-    builder = APReportBuilder(wb, df)
-    builder.build()
-    wb.save(buf)
-    buf.seek(0)
-
-    return [(f"ap_report_{_DATE_SUFFIX}.xlsx", buf.getvalue())]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -701,7 +673,7 @@ def main() -> None:
     wb = Workbook()
     wb.remove(wb.active)
 
-    builder = APReportBuilder(wb, df)
+    builder = ARReportBuilder(wb, df)
     builder.build()
 
     wb.save(OUTPUT_FILE)
