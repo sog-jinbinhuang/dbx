@@ -47,8 +47,8 @@ from openpyxl.utils import get_column_letter
 DBX_SERVER_HOSTNAME = os.environ["DATABRICKS_SERVER_HOSTNAME"]
 DBX_HTTP_PATH       = os.environ["DATABRICKS_HTTP_PATH"]
 DBX_ACCESS_TOKEN    = os.environ["DATABRICKS_TOKEN"]
-DBX_CATALOG         = "prod"
-DBX_SCHEMA          = "gold_sales"   # matches FCT_GLOBAL_SALES_ORDERS_2's schema; supply-chain tables below are qualified explicitly since they're a different schema
+DBX_CATALOG         = "dev"
+DBX_SCHEMA          = "gold_supply_chain"   # matches FCT_GLOBAL_SALES_ORDERS_2's schema; supply-chain tables below are qualified explicitly since they're a different schema
 
 # NOTE: FCT_GLOBAL_INVENTORY and FCT_GLOBAL_INVENTORY_CHANGE have not been
 # confirmed to exist in the new Databricks workspace yet -- prod.gold_supply_chain
@@ -97,14 +97,15 @@ FMT_PCT  = "0.0%"
 FMT_MOH  = "#,##0.0"
 FMT_MOVE = "#,##0;(#,##0)"
 
-# Palette
-NAVY  = "1F3864"
-STEEL = "2E5496"
-LIGHT = "D9E1F2"
-ZEBRA = "F2F5FB"
-GREY  = "808080"
+# Palette -- lighter slate-blue theme, matching the other converted reports
+# (production_report.py, etc.) rather than the original dark-navy scheme.
+NAVY  = "44546A"   # was 1F3864 (dark navy) -- now the same slate as other reports' titles
+STEEL = "6D89AC"   # was 2E5496 (medium blue) -- lighter slate accent
+LIGHT = "D9E2F3"   # was D9E1F2 (near-identical, normalized to match other reports exactly)
+ZEBRA = "F8F9FB"   # was F2F5FB -- normalized to match other reports' alt-row tint
+GREY  = "8FA0B3"   # was 808080 (neutral grey) -- muted slate-blue instead, consistent with theme
 
-THIN   = Side(style="thin", color="BFBFBF")
+THIN   = Side(style="thin", color="D9E2F3")   # was BFBFBF (neutral grey) -- blue-tinted hairline
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
 
@@ -729,7 +730,13 @@ class ReportBuilder:
                 ws.row_dimensions[r].outline_level = 1
                 r += 1
 
-                for (fac,), fac_rows in pkg_rows.groupby(["FACILITY"], sort=False):
+                # Pass a plain string (not a single-item list) so the group
+                # key comes back as a scalar consistently across pandas
+                # versions -- groupby(["FACILITY"]) (a length-1 list) used
+                # to yield a 1-tuple key in older pandas, but newer versions
+                # yield a plain scalar instead, which broke the (fac,)
+                # tuple-unpacking pattern with "too many values to unpack".
+                for fac, fac_rows in pkg_rows.groupby("FACILITY", sort=False):
                     # ── Facility (L2, hidden) — WP cost ───────────────────────
                     # WP cost is pool-level (same for all lots in facility)
                     cost_wp = fac_rows["COST_KG_WP"].iloc[0]
