@@ -94,7 +94,7 @@ REPORT_REGISTRY: list[ReportDef] = [
             to=["jhuang@mafcolicorice.com"],
         ),
         subject="Sales Volume",
-        group="afternoon",
+        group="weekly",
     ),
     ReportDef(
         name="Production Volume & Cost",

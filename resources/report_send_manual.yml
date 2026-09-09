@@ -1,0 +1,34 @@
+resources:
+  jobs:
+    report_send_manual:
+      name: report_send_manual
+
+      # No schedule -- manual trigger only, for testing send_reports.py
+      # without running the full ADF -> bronze -> dbt chain first, and
+      # without waiting for report_send_weekly's Monday schedule.
+      #
+      # Run with a specific group via CLI, e.g.:
+      #   databricks bundle run report_send_manual --target dev --profile new-workspace --params frequency_group=afternoon
+      # Defaults to "morning" if no param is passed.
+
+      tasks:
+        - task_key: send_reports
+          environment_key: reports_env
+          max_retries: 0
+          notebook_task:
+            notebook_path: ../reports/send_reports.py
+            base_parameters:
+      # CHANGE THE FREQUENCY GROUP    
+              frequency_group: afternoon
+
+      environments:
+        - environment_key: reports_env
+          spec:
+            environment_version: "1"
+            dependencies:
+              - databricks-sql-connector
+              - openpyxl
+
+      email_notifications:
+        on_failure:
+          - jhuang@mafcolicorice.com

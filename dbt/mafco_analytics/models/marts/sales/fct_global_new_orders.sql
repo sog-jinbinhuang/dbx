@@ -5,59 +5,45 @@ with parsed as (
         order_num,
         created_date_time,
         fob_remark,
-        -- Parse the whole "YYYYMMDD:HH:mm:ss" string in one shot rather than
-        -- slicing by fixed character offsets — the source has colons
-        -- separating date/hour/minute/second, so raw substr() math is fragile
-        -- and breaks silently if the layout shifts. TRY_TO_TIMESTAMP returns
-        -- NULL on a bad parse (same safety as Snowflake's TRY_TO_DATE) instead
-        -- of failing the whole model.
-        try_to_timestamp(created_date_time, 'yyyyMMdd:HH:mm:ss') as created_ts
+        -- Parse the whole "yyyyMMddHH:mm:ss" string in one shot rather than
+        -- slicing by fixed character offsets -- the source has NO colon
+        -- between date and hour (only before minutes/seconds), so raw
+        -- substr() math is fragile and breaks silently if the layout
+        -- shifts. TRY_TO_TIMESTAMP returns NULL on a bad parse (same safety
+        -- as Snowflake's TRY_TO_DATE) instead of failing the whole model.
+        try_to_timestamp(created_date_time, 'yyyyMMddHH:mm:ss') as created_ts
     from {{ ref('stg_order_hdr') }}
 
 ),
 
-order_hdr as (
+recent as (
 
     select
         source_database,
         order_num,
         created_date_time,
         fob_remark,
-        cast(created_ts as date) as created_date,
-        -- Databricks SQL has no TIME type, so time-of-day is represented as
-        -- seconds-since-midnight (int) for comparison purposes. hour()/
-        -- minute()/second() all return NULL automatically if created_ts is NULL.
-        hour(created_ts)   * 3600
-        + minute(created_ts) * 60
-        + second(created_ts)          as created_time_secs
+        created_ts
     from parsed
-
-),
-
-recent as (
-
-    select *
-    from order_hdr
     where
-        -- Databricks SQL warehouses default their session timezone to UTC,
-        -- while this pipeline ran in America/New_York on Snowflake. Using
-        -- plain current_date()/current_timestamp() shifts results by a day
-        -- (and near month-end, by a whole month bucket) whenever UTC has
-        -- already rolled over past midnight local time. Converting the UTC
-        -- instant to America/New_York explicitly makes this correct
-        -- regardless of the session/warehouse's default timezone setting.
+        -- Straight rolling 24-hour window on the actual timestamp, instead
+        -- of the old two-branch (today OR yesterday-with-a-time-of-day-
+        -- cutoff) approach. That approach re-derives the same 24h window
+        -- indirectly via date + time-of-day comparisons, which is harder to
+        -- reason about and shrinks/shifts in confusing ways as the clock
+        -- moves -- this is just "anything created in the last 24 hours,"
+        -- stated directly.
         --
-        -- same day: any time is within 24h
-        (created_date = cast(from_utc_timestamp(current_timestamp(), 'America/New_York') as date))
-        or
-        -- yesterday: only if time is after (current_time - used as cutoff)
-        (
-            created_date = date_sub(cast(from_utc_timestamp(current_timestamp(), 'America/New_York') as date), 1)
-            and created_time_secs >= (
-                hour(from_utc_timestamp(current_timestamp(), 'America/New_York')) * 3600
-                + minute(from_utc_timestamp(current_timestamp(), 'America/New_York')) * 60
-                + second(from_utc_timestamp(current_timestamp(), 'America/New_York'))
-            )
+        -- created_ts has no timezone info (parsed from a naive
+        -- "yyyyMMdd:HH:mm:ss" source string), so it represents whatever
+        -- local timezone the source system writes in -- America/New_York,
+        -- same as the original Snowflake pipeline. Databricks SQL warehouses
+        -- default current_timestamp() to UTC regardless of session
+        -- settings, so "now" is converted to America/New_York once here to
+        -- compare on the same footing as created_ts, then shifted back 24h
+        -- for the cutoff.
+        created_ts >= (
+            from_utc_timestamp(current_timestamp(), 'America/New_York') - interval 24 hours
         )
 
 ),
@@ -85,8 +71,8 @@ joined as (
     select
         h.source_database                       as `database`,
         h.order_num,
-        h.created_date,
-        h.created_time_secs,
+        cast(h.created_ts as date)               as created_date,
+        h.created_ts,
         h.fob_remark,
         s.sales_rep,
         s.cust_code,
