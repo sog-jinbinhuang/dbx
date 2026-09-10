@@ -105,4 +105,11 @@ REPORT_REGISTRY: list[ReportDef] = [
         subject="Production Volume & Cost",
         group="weekly",
     ),
+    ReportDef(
+    name="Backlog Reports (China)",
+    module_path=REPORTS_DIR / "rpt_backlog_china.py",
+    recipients=Recipients(to=["jhuang@mafcolicorice.com"]),
+    subject="Backlog Reports — China / Weifeng",
+    group="afternoon",  # matches the original report_groups.py grouping
+    ),
 ]

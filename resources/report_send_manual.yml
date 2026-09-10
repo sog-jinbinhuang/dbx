@@ -19,7 +19,7 @@ resources:
             notebook_path: ../reports/send_reports.py
             base_parameters:
       # CHANGE THE FREQUENCY GROUP    
-              frequency_group: afternoon
+              frequency_group: morning
 
       environments:
         - environment_key: reports_env

@@ -74,7 +74,7 @@ resources:
       schedule:
         quartz_cron_expression: "0 0 8 * * ?"
         timezone_id: "America/New_York"
-        pause_status: UNPAUSED   # unpause once you've verified a manual run succeeds end-to-end
+        pause_status: PAUSED   # unpause once you've verified a manual run succeeds end-to-end
  
       email_notifications:
         on_failure:
