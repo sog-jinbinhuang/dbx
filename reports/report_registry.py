@@ -135,7 +135,11 @@ REPORT_REGISTRY: list[ReportDef] = [
         name="Sales Volume",
         module_path=REPORTS_DIR / "rpt_sales_volume.py",
         recipients=Recipients(
-            to=["jhuang@mafcolicorice.com"],
+            to=[
+                "gaetan.baldy@evd.fr",
+                "caroline.bidart@evd.fr",
+                "florian.mauny@evd.fr",
+                "jhuang@mafcolicorice.com",],
         ),
         subject="Sales Volume",
         group="weekly",
@@ -155,5 +159,17 @@ REPORT_REGISTRY: list[ReportDef] = [
     recipients=Recipients(to=["showl@mafco-china.com","jhe@mafco-china.com","jhuang@mafcolicorice.com",]),
     subject="Backlog Reports — China / Weifeng",
     group="afternoon",  # matches the original report_groups.py grouping
+    ),
+    ReportDef(
+    name="Global Order Audit",
+    module_path=REPORTS_DIR / "rpt_audit_order.py",
+    recipients=Recipients(to=[
+            "ahaque@mafcolicorice.com",  
+            "pberg@mafcolicorice.com",
+            "rkhan@mafcolicorice.com",
+            "jhuang@mafcolicorice.com",
+    ]),
+    subject="Global Order Audit (Weekly)",
+    group="weekly",  # matches the original weekly_emailer.py schedule
     ),
 ]

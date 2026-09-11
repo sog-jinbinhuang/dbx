@@ -39,7 +39,7 @@ _DIR        = os.path.dirname(os.path.abspath(__file__))
 DBX_SERVER_HOSTNAME = os.environ["DATABRICKS_SERVER_HOSTNAME"]
 DBX_HTTP_PATH       = os.environ["DATABRICKS_HTTP_PATH"]
 DBX_ACCESS_TOKEN    = os.environ["DATABRICKS_TOKEN"]
-DBX_CATALOG         = "prod"
+DBX_CATALOG         = "dev"
 DBX_SCHEMA          = "gold_sales"
 
 TODAY       = date.today()
