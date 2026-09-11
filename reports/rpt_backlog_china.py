@@ -39,7 +39,7 @@ _DIR        = os.path.dirname(os.path.abspath(__file__))
 DBX_SERVER_HOSTNAME = os.environ["DATABRICKS_SERVER_HOSTNAME"]
 DBX_HTTP_PATH       = os.environ["DATABRICKS_HTTP_PATH"]
 DBX_ACCESS_TOKEN    = os.environ["DATABRICKS_TOKEN"]
-DBX_CATALOG         = "dev"
+DBX_CATALOG         = "prod"
 DBX_SCHEMA          = "gold_sales"
 
 TODAY       = date.today()
@@ -172,24 +172,24 @@ def sum_group(rows: pd.DataFrame) -> tuple[ValDict, ValDict, ValDict]:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class StyleSheet:
-    TITLE_BG      = "1F3864";  TITLE_FG      = "FFFFFF"
-    GRP_BG        = "2E75B6";  GRP_FG        = "FFFFFF"
-    VAR_GRP_BG    = "375623";  VAR_GRP_FG    = "FFFFFF"
-    PY_VAR_GRP_BG = "833C00";  PY_VAR_GRP_FG = "FFFFFF"
-    COL_BG        = "BDD7EE";  COL_FG        = "000000"
-    GRAND_BG      = "1F3864";  GRAND_FG      = "FFFFFF"
+    TITLE_BG      = "34495E";  TITLE_FG      = "FFFFFF"
+    GRP_BG        = "5B84B1";  GRP_FG        = "FFFFFF"
+    VAR_GRP_BG    = "6E8B6E";  VAR_GRP_FG    = "FFFFFF"
+    PY_VAR_GRP_BG = "9C7A54";  PY_VAR_GRP_FG = "FFFFFF"
+    COL_BG        = "DCE6F1";  COL_FG        = "000000"
+    GRAND_BG      = "34495E";  GRAND_FG      = "FFFFFF"
     CUST_BG       = "FFFFFF";  CUST_FG       = "000000"
-    ALT_BG        = "F2F7FB"
-    VAR_NEG_BG    = "FCE4D6";  VAR_POS_BG    = "E2EFDA"
-    TREND_HDR_BG  = "404040";  TREND_SUB_BG  = "595959"
-    GRP_EVEN      = "FFFFFF";  GRP_ODD       = "F2F7FB"
-    CUST_ROW      = "EEF4F9";  PROD_ROW      = "F2EDF9"
-    NO_MATCH_BG   = "FFE699"
+    ALT_BG        = "F7F9FC"
+    VAR_NEG_BG    = "FBE9E7";  VAR_POS_BG    = "E9F5EC"
+    TREND_HDR_BG  = "6C7A89";  TREND_SUB_BG  = "8B98A5"
+    GRP_EVEN      = "FFFFFF";  GRP_ODD       = "F7F9FC"
+    CUST_ROW      = "F3F7FB";  PROD_ROW      = "F6F3FA"
+    NO_MATCH_BG   = "FFF3CD"
 
-    SEP       = Side(style="medium", color="4472C4")
-    OUTER     = Side(style="medium", color="000000")
-    THIN      = Side(style="thin",   color="000000")
-    THIN_GREY = Side(style="thin",   color="CCCCCC")
+    SEP       = Side(style="thin",   color="8FA3BF")
+    OUTER     = Side(style="medium", color="6C7A89")
+    THIN      = Side(style="thin",   color="B0BAC5")
+    THIN_GREY = Side(style="thin",   color="E1E5EA")
 
     @staticmethod
     def fill(hex_color: str) -> PatternFill:
@@ -633,8 +633,8 @@ class ReportBuilder:
         """NEW ORDERS tab — raw rows grouped by DATABASE with subtotals."""
         ws  = self._new_sheet("NEW ORDERS", index=1)
         N   = len(ORDERS_COLS)
-        thin      = Side(style="thin", color="000000")
-        thin_grey = Side(style="thin", color="CCCCCC")
+        thin      = S.THIN
+        thin_grey = S.THIN_GREY
 
         rev_col = next(i+1 for i,(_, _, k,_,_) in enumerate(ORDERS_COLS) if k=="REVENUE")
         qty_col = next(i+1 for i,(_, _, k,_,_) in enumerate(ORDERS_COLS) if k=="QTY_IN_KG")

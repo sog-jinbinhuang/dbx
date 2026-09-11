@@ -111,7 +111,22 @@ REPORT_REGISTRY: list[ReportDef] = [
         name="Backlog Reports",
         module_path=REPORTS_DIR / "rpt_backlog.py",
         recipients=Recipients(
-            to=["jhuang@mafcolicorice.com"],
+            to=[
+                "jsrobinson@mafcolicorice.com",
+                "lcollison@mafcolicorice.com",
+                "ahaque@mafcolicorice.com",
+                "mlima@mafcolicorice.com",
+                "djames@mafcolicorice.com",
+                "kmehmood@mafcolicorice.com",
+                "kanda.wanichkanjanakul@wholeearthbrands.com",
+                "schauhan@mafcolicorice.com",
+                "gwenn.boie@evd.fr",
+                "jhe@mafco-china.com",
+                "lynns@mafco-china.com",
+                "florian.mauny@evd.fr",
+                "arobinson@mafcolicorice.com",
+                "lergasheva@mafcolicorice.com",
+                "jhuang@mafcolicorice.com",],
         ),
         subject="Backlog Reports",
         group="afternoon",
@@ -137,7 +152,7 @@ REPORT_REGISTRY: list[ReportDef] = [
     ReportDef(
     name="Backlog Reports (China)",
     module_path=REPORTS_DIR / "rpt_backlog_china.py",
-    recipients=Recipients(to=["jhuang@mafcolicorice.com"]),
+    recipients=Recipients(to=["showl@mafco-china.com","jhe@mafco-china.com","jhuang@mafcolicorice.com",]),
     subject="Backlog Reports — China / Weifeng",
     group="afternoon",  # matches the original report_groups.py grouping
     ),
