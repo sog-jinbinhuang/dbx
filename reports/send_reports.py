@@ -9,6 +9,12 @@
 # MAGIC finance_emailer.py, weekly_emailer.py, inventory_emailer.py) -- one
 # MAGIC generic notebook + a central registry instead of one script per group.
 # MAGIC
+# MAGIC All three frequency groups are now chained as the final task of their
+# MAGIC own dedicated pipeline (daily_full_refresh_morning / _afternoon /
+# MAGIC _weekly), so freshness is guaranteed by task dependency -- this
+# MAGIC notebook doesn't need to independently check whether upstream data is
+# MAGIC current.
+# MAGIC
 # MAGIC To change what sends when: edit report_registry.py, not this file or
 # MAGIC the job YAMLs.
 
@@ -17,14 +23,12 @@ import importlib.util
 import os
 import smtplib
 import sys
-from datetime import date, datetime
+from datetime import date
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
-
-import requests
 
 # COMMAND ----------
 # Resolve this notebook's own directory via the notebook context API --
@@ -72,64 +76,6 @@ EMAIL_FROM    = "messaging@sweetoakgroup.com"
 # SMTP password now comes from a Databricks secret, not a local env var
 SMTP_PASSWORD = dbutils.secrets.get(scope="reports", key="smtp-password")
 TODAY         = date.today()
-
-# COMMAND ----------
-# Guard (used by report_send_weekly only -- morning/afternoon are now
-# chained directly onto daily_full_refresh_morning/_afternoon as a task,
-# so they don't need this check). Confirms at least one of today's two
-# daily refresh jobs actually succeeded before sending the weekly report.
-UPSTREAM_JOB_NAME_FRAGMENT = "daily_full_refresh"   # matches both _morning and _afternoon
-
-def _api_get(path: str, params: dict | None = None) -> dict:
-    url = f"https://{os.environ['DATABRICKS_SERVER_HOSTNAME']}{path}"
-    resp = requests.get(
-        url,
-        headers={"Authorization": f"Bearer {os.environ['DATABRICKS_TOKEN']}"},
-        params=params or {},
-        timeout=30,
-    )
-    resp.raise_for_status()
-    return resp.json()
-
-def upstream_succeeded_today() -> bool:
-    """Looks up every job whose name contains UPSTREAM_JOB_NAME_FRAGMENT
-    (matches daily_full_refresh_morning AND _afternoon, and bundle-deployed
-    names prefixed like '[dev jhuang] daily_full_refresh_morning'), checks
-    each one's most recent completed run, and returns True if ANY of them
-    succeeded today."""
-    try:
-        jobs = _api_get("/api/2.1/jobs/list", {"limit": 25}).get("jobs", [])
-        matches = [j for j in jobs if UPSTREAM_JOB_NAME_FRAGMENT in j["settings"]["name"]]
-        if not matches:
-            print(f"  WARNING: no job found matching '{UPSTREAM_JOB_NAME_FRAGMENT}' -- "
-                  f"proceeding without the freshness check.")
-            return True
-
-        for job in matches:
-            job_name = job["settings"]["name"]
-            runs = _api_get("/api/2.1/jobs/runs/list", {
-                "job_id": job["job_id"], "limit": 1, "completed_only": "true",
-            }).get("runs", [])
-
-            if not runs:
-                print(f"  '{job_name}' has no completed runs yet.")
-                continue
-
-            run = runs[0]
-            result_state = run.get("state", {}).get("result_state")
-            start_date = datetime.fromtimestamp(run["start_time"] / 1000).date()
-
-            if result_state == "SUCCESS" and start_date == TODAY:
-                print(f"  '{job_name}' succeeded today -- proceeding.")
-                return True
-            print(f"  '{job_name}' latest run: {result_state}, started {start_date} (not today's success).")
-
-        print(f"  None of the daily refresh jobs succeeded today.")
-        return False
-
-    except Exception as e:
-        print(f"  WARNING: freshness check failed ({e}) -- proceeding without it.")
-        return True
 
 # COMMAND ----------
 _module_cache: dict[Path, object] = {}
@@ -194,13 +140,6 @@ print(f"Frequency group: {FREQUENCY_GROUP}  ({len(matching)} report(s))")
 
 if not matching:
     print("  No reports registered for this group -- nothing to do.")
-elif FREQUENCY_GROUP == "weekly" and not upstream_succeeded_today():
-    # Morning/afternoon are chained directly onto their own refresh job as a
-    # task, so they're already gated by that dependency -- no need to also
-    # call the Jobs API for them. Weekly runs on its own schedule, so it
-    # still needs this check.
-    print(f"\nNo daily refresh succeeded today -- skipping all sends this run.")
-    matching = []
 
 for rd in matching:
     print(f"\nBuilding: {rd.name}  ({rd.module_path.name})")
