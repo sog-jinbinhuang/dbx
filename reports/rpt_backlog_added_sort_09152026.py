@@ -131,23 +131,17 @@ class ReportConfig:
     """
     Controls which dimension drives the outer pivot of the report.
 
-    pivot_col        : column in FCT_GLOBAL_BACKLOG that defines the top-level
-                        grouping — 'REPORTING_SEGMENT' or 'SALES_REP'.
-    show_rep_col     : True  → col B = Sales Rep, data starts col 3 (segment mode).
-                        False → no Sales Rep col, data starts col 2 (rep mode).
-    col1_label       : header label for column A in the summary tab.
-    output_file      : path to the Excel output file.
-    sort_by_variance : False (default) → pivot values/customer groups sorted
-                        by CY whole-year revenue, descending (biggest first).
-                        True  → sorted by whole-year BUDGET variance
-                        (CY_WHOLE_YEAR - BGT_WHOLE_YEAR), ascending -- the
-                        most negative (furthest under budget) sorts first.
+    pivot_col    : column in FCT_GLOBAL_BACKLOG that defines the top-level
+                   grouping — 'REPORTING_SEGMENT' or 'SALES_REP'.
+    show_rep_col : True  → col B = Sales Rep, data starts col 3 (segment mode).
+                   False → no Sales Rep col, data starts col 2 (rep mode).
+    col1_label   : header label for column A in the summary tab.
+    output_file  : path to the Excel output file.
     """
-    pivot_col:        str
-    show_rep_col:      bool
-    col1_label:        str
-    output_file:       str
-    sort_by_variance:  bool = False
+    pivot_col:    str
+    show_rep_col: bool
+    col1_label:   str
+    output_file:  str
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -764,27 +758,13 @@ class ReportBuilder:
         """
         Return the ordered list of pivot dimension values.
 
-        Default            : NEW BUSINESS last, then alphabetical (TOBACCO first).
-        sort_by_variance    : NEW BUSINESS last, then by whole-year budget
-                               variance (CY_WHOLE_YEAR - BGT_WHOLE_YEAR)
-                               ascending -- most negative (furthest under
-                               budget) first.
+        Segment mode : NEW BUSINESS last, then by CY whole-year revenue DESC.
+        Rep mode     : NEW BUSINESS last, then alphabetical.
         """
         col = self.config.pivot_col
         vals = self.df[col].unique()
 
-        if self.config.sort_by_variance:
-            variance_by_val = (
-                self.df.assign(_variance=self.df["CY_WHOLE_YEAR"] - self.df["BGT_WHOLE_YEAR"])
-                .groupby(col)["_variance"]
-                .sum()
-            )
-            return sorted(
-                vals,
-                key=lambda v: (v == "NEW BUSINESS", variance_by_val.get(v, 0)),
-            )
-
-        # Default: alphabetical, NEW BUSINESS last
+        # Both modes: alphabetical, NEW BUSINESS last
         return sorted(vals, key=lambda v: (v != "TOBACCO", v == "NEW BUSINESS", v))
 
     def _detail_layout(self) -> ColumnLayout:
@@ -964,28 +944,15 @@ class ReportBuilder:
                 ws.cell(row=cur, column=col).fill = S.fill(S.GRP_BG)
             cur += 1
 
-        # Sort groups: by CY whole-year revenue DESC by default, or by
-        # whole-year budget variance ASC (most negative first) when
-        # sort_by_variance is set -- NEW BUSINESS always last either way.
-        if self.config.sort_by_variance:
-            grp_order = (
-                df.assign(_variance=df["CY_WHOLE_YEAR"] - df["BGT_WHOLE_YEAR"])
-                .groupby("CUST_GROUP")["_variance"]
-                .sum()
-                .reset_index()
-                .assign(_nb=lambda x: x["CUST_GROUP"] == "NEW BUSINESS")
-                .sort_values(["_nb", "_variance"], ascending=[True, True])
-                ["CUST_GROUP"].tolist()
-            )
-        else:
-            grp_order = (
-                df.groupby("CUST_GROUP")["CY_WHOLE_YEAR"]
-                .sum()
-                .reset_index()
-                .assign(_nb=lambda x: x["CUST_GROUP"] == "NEW BUSINESS")
-                .sort_values(["_nb", "CY_WHOLE_YEAR"], ascending=[True, False])
-                ["CUST_GROUP"].tolist()
-            )
+        # Sort groups by CY whole-year revenue DESC, NEW BUSINESS last
+        grp_order = (
+            df.groupby("CUST_GROUP")["CY_WHOLE_YEAR"]
+            .sum()
+            .reset_index()
+            .assign(_nb=lambda x: x["CUST_GROUP"] == "NEW BUSINESS")
+            .sort_values(["_nb", "CY_WHOLE_YEAR"], ascending=[True, False])
+            ["CUST_GROUP"].tolist()
+        )
         for grp_idx, grp_key in enumerate(grp_order):
             grp_rows = df[df["CUST_GROUP"] == grp_key]
             grp_bg   = S.GRP_EVEN if grp_idx % 2 == 0 else S.GRP_ODD
@@ -1097,15 +1064,6 @@ REP_CONFIG = ReportConfig(
     output_file  = os.path.join(_DIR, f"sales_report_by_sales_rep_{_DATE_SUFFIX}.xlsx"),
 )
 
-VARIANCE_CONFIG = ReportConfig(
-    pivot_col        = "REPORTING_SEGMENT",
-    show_rep_col     = True,
-    col1_label       = "Segment",
-    output_file      = os.path.join(_DIR, f"sales_report_by_budget_variance_{_DATE_SUFFIX}.xlsx"),
-    sort_by_variance = True,   # segments AND customer groups sorted by whole-year
-                                # budget variance ascending -- most under-budget first
-)
-
 
 def build_report(df: pd.DataFrame, orders_df: pd.DataFrame,
                  config: ReportConfig) -> None:
@@ -1140,9 +1098,6 @@ def main() -> None:
     print("\nBuilding sales rep report...")
     build_report(df, orders_df, REP_CONFIG)
 
-    print("\nBuilding budget variance report...")
-    build_report(df, orders_df, VARIANCE_CONFIG)
-
     print(f"\nCY={CY}  PY={PY}  Month={CUR_MONTH}  Q{CUR_QUARTER}")
 
 
@@ -1151,9 +1106,10 @@ def main() -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def build_attachments() -> list[tuple[str, bytes]]:
-    """Loads data ONCE, builds the segment, sales-rep, AND budget-variance
-    workbooks from it, returns all three as attachments -- avoids
-    re-querying FCT_GLOBAL_BACKLOG more than once."""
+    """Loads data ONCE, builds BOTH the segment and sales-rep workbooks from
+    it, returns both as attachments -- matches the original report_emailer.py
+    design (one 'Executive team' email with two attachments), and avoids
+    re-querying FCT_GLOBAL_BACKLOG twice."""
     import copy
     import io
 
@@ -1168,7 +1124,6 @@ def build_attachments() -> list[tuple[str, bytes]]:
     for config_template, filename in [
         (SEGMENT_CONFIG, f"sales_report_by_product_segment_{_DATE_SUFFIX}.xlsx"),
         (REP_CONFIG, f"sales_report_by_sales_rep_{_DATE_SUFFIX}.xlsx"),
-        (VARIANCE_CONFIG, f"sales_report_by_budget_variance_{_DATE_SUFFIX}.xlsx"),
     ]:
         buf = io.BytesIO()
         config = copy.copy(config_template)
