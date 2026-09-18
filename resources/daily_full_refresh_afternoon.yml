@@ -79,7 +79,7 @@ resources:
       # ADF -> bronze -> dbt -> send_afternoon_reports chain reliably
       # finishes before the afternoon reports need to be out.
       schedule:
-        quartz_cron_expression: "0 0 15 * * ?"
+        quartz_cron_expression: "0 0 15 ? * MON-FRI"
         timezone_id: "America/New_York"
         pause_status: UNPAUSED
 

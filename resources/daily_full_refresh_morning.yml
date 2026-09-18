@@ -97,7 +97,7 @@ resources:
       # before the morning reports need to be out. Adjust earlier if the
       # chain regularly runs long.
       schedule:
-        quartz_cron_expression: "0 0 9 * * ?"
+        quartz_cron_expression: "0 0 9 ? * MON-FRI"
         timezone_id: "America/New_York"
         pause_status: UNPAUSED   # unpause once you've verified a manual run succeeds end-to-end
 
