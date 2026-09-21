@@ -347,6 +347,7 @@ final_prep as (
 select
     o.database,
     o.created_by,
+    o.created_date,
     o.cust_name,
     o.order_num,
     o.ext_price_in_usd as revenue,

@@ -130,6 +130,7 @@ class Loader:
             SELECT
                 `DATABASE`  AS SOURCE_DATABASE,
                 CREATED_BY,
+                CREATED_DATE,
                 CUST_NAME,
                 ORDER_NUM,
                 REVENUE,
@@ -151,9 +152,10 @@ class Loader:
                        .replace({"nan": "", "None": ""}).fillna(""))
         for col in ["REVENUE", "QTY_IN_KG"]:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+        df["CREATED_DATE"] = pd.to_datetime(df["CREATED_DATE"], errors="coerce")
 
         df = df.sort_values(
-            ["SOURCE_DATABASE", "REVENUE"], ascending=[True, False]
+            ["SOURCE_DATABASE", "CREATED_DATE"], ascending=[True, True]
         ).reset_index(drop=True)
         return df
 
@@ -269,11 +271,12 @@ class OrderAuditReportBuilder:
     def build_detail_tab(self, db_df: pd.DataFrame, sheet_name: str, db: str) -> None:
         ws = self.wb.create_sheet(sheet_name)
         cols = [
-            ("Created By",     22, "CREATED_BY",  "@",      "left"),
-            ("Customer",       30, "CUST_NAME",   "@",      "left"),
-            ("Order Num",      16, "ORDER_NUM",   "@",      "center"),
-            ("Revenue (USD)",  16, "REVENUE",     NUM_USD,  "right"),
-            ("Quantity (kg)",  16, "QTY_IN_KG",   NUM_QTY,  "right"),
+            ("Created By",     22, "CREATED_BY",   "@",          "left"),
+            ("Created Date",   14, "CREATED_DATE", "MM/DD/YYYY", "center"),
+            ("Customer",       30, "CUST_NAME",    "@",          "left"),
+            ("Order Num",      16, "ORDER_NUM",    "@",          "center"),
+            ("Revenue (USD)",  16, "REVENUE",      NUM_USD,      "right"),
+            ("Quantity (kg)",  16, "QTY_IN_KG",    NUM_QTY,      "right"),
         ]
         N = len(cols)
 
@@ -300,6 +303,8 @@ class OrderAuditReportBuilder:
             ws.row_dimensions[cur_row].height = 15
             for ci, (_, _, key, fmt, halign) in enumerate(cols, start=1):
                 val = r[key]
+                if key == "CREATED_DATE":
+                    val = val.date() if pd.notna(val) and hasattr(val, "date") else None
                 c = ws.cell(row=cur_row, column=ci, value=val)
                 c.font          = S.font(bold=False)
                 c.fill          = S.fill(row_bg)
@@ -313,11 +318,12 @@ class OrderAuditReportBuilder:
         # grand total row
         self._sc(ws, cur_row, 1, "GRAND TOTAL", bold=True,
                  fg=S.GRAND_FG, bg=S.GRAND_BG, halign="left")
-        self._sc(ws, cur_row, 2, None, bg=S.GRAND_BG)
-        self._sc(ws, cur_row, 3, None, bg=S.GRAND_BG)
-        self._sc(ws, cur_row, 4, rev_total, bold=True,
+        self._sc(ws, cur_row, 2, None, bg=S.GRAND_BG)   # Created Date -- blank
+        self._sc(ws, cur_row, 3, None, bg=S.GRAND_BG)   # Customer -- blank
+        self._sc(ws, cur_row, 4, None, bg=S.GRAND_BG)   # Order Num -- blank
+        self._sc(ws, cur_row, 5, rev_total, bold=True,
                  fg=S.GRAND_FG, bg=S.GRAND_BG, fmt=NUM_USD)
-        self._sc(ws, cur_row, 5, qty_total, bold=True,
+        self._sc(ws, cur_row, 6, qty_total, bold=True,
                  fg=S.GRAND_FG, bg=S.GRAND_BG, fmt=NUM_QTY)
         ws.row_dimensions[cur_row].height = 16
 
