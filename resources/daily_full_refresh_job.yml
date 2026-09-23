@@ -14,7 +14,7 @@ resources:
              "INV_TRANSACT", "CUST", "INVOICE_HDR", "INVOICE_TRL",
              "ORDER_HDR", "ORDER_TRL", "WHS_PROD_PKG", "LOT", "PACKAGING",
              "PROD_PKG", "PROD_PKG_WHS_LOT", "PROD_PKG_WHS_LOT_LOC",
-             "REMARKS", "SUPPNAME"]
+             "REMARKS", "SUPPNAME","ARCASH"]
 
       tasks:
         # ---- Task 1: trigger the ADF pipeline in the old tenant, wait for it ----

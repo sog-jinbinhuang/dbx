@@ -35,5 +35,7 @@ sources:
       - name: prod_pkg_whs_lot_loc
       - name: remarks
       - name: suppname
+      - name: arcash
       - name: onestream_hierarchy
       - name: onestream_facts
+      - name: onestream_fxrates

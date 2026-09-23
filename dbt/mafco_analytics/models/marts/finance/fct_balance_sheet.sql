@@ -34,13 +34,24 @@
 -- taken from stg_onestream__facts instead, which carries one value per entity_id already.
 -- Join dim_entity_segment (or dim_entity filtered to your chosen consolidation_view) onto
 -- entity_id downstream, in Python, once you've decided which view you need.
+--
+-- Sums amount_usd (from int_facts_usd), not the raw local-currency amount. For USD-native
+-- entities this is identical to amount. For non-USD entities (individual local subsidiaries
+-- like Argentina, Thailand, etc.) it's translated via fxrates' AverageRate_Fcst -- see
+-- int_facts_usd.sql for the two known, accepted caveats (forecast not actual; average rate
+-- used in place of a closing rate that doesn't exist for 2026). Pre-computed OneStream
+-- consolidation entities (segment roots, _CONS nodes) are unaffected either way -- they're
+-- already stored in USD by OneStream itself and pass through amount_usd = amount.
+-- amount_usd is null wherever fx_conversion_missing is true (no matching rate found at
+-- all) -- excluded here via the not-null filter rather than silently summed as zero.
 
 with facts as (
 
     select *
-    from {{ ref('stg_onestream__facts') }}
+    from {{ ref('int_facts_usd') }}
     where flow_name = 'EndBalLoad'
       and data_type_name <> 'CFStmt_Calc'
+      and amount_usd is not null
 
 ),
 
@@ -65,7 +76,7 @@ aggregated as (
         f.scenario_name,
         f.time_period,
         max(f.currency)           as currency,
-        sum(f.amount)             as amount
+        sum(f.amount_usd)         as amount
     from facts f
     inner join bs_accounts a on a.account_id = f.account_id
     group by f.entity_id, f.account_id, f.scenario_id, f.scenario_name, f.time_period
