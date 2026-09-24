@@ -10,11 +10,19 @@ cust as (
 
 ),
 
+payment_terms as (
+
+    select * from {{ ref('stg_payment_terms') }}
+
+),
+
 joined as (
 
     select
         a.source_database                    as database,
         c.cust_name,
+        pt.description                       as terms_description,
+        pt.prox_discount_percent_1,
         c.cust_code,
         -- posting_year / posting_period is the authoritative GL period the
         -- discount actually posted to -- used as "year/month applied"
@@ -39,6 +47,9 @@ joined as (
         on  a.source_database = c.source_database
         and a.system_id       = c.system_id
         and a.cust_key        = c.cust_key
+    left join payment_terms pt
+        on  c.source_database = pt.source_database
+        and c.default_terms   = pt.internal_terms_key
     -- only rows where a discount was actually applied
     where a.discount_amt is not null
       and a.discount_amt <> 0

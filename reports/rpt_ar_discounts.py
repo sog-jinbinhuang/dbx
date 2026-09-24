@@ -7,8 +7,10 @@ and posting period (year/month).
 
 Tabs produced
 -------------
-  SUMMARY  -- one row per (database, year_period): discount count, total $
-  DETAIL   -- flat, sortable/filterable list of every discount transaction
+  BY CUSTOMER    -- pivot: one row per (database, customer), one column
+                    per month, plus a Total column
+  <DATABASE> Detail -- one tab per database: flat, sortable list of every
+                    discount transaction in that database
 """
 
 from __future__ import annotations
@@ -47,17 +49,18 @@ NUM_USD = "#,##0.00;-#,##0.00"
 
 DETAIL_COLS: list[tuple[str, int, str, str, str]] = [
     # (header, col_width, source_key, number_format, halign)
-    ("Year-Period",      12, "YEAR_PERIOD",    "@",          "center"),
-    ("Customer",         28, "CUST_NAME",      "@",          "left"),
-    ("Cust Code",        10, "CUST_CODE",      "@",          "center"),
-    ("Discount Amt",     14, "DISCOUNT_AMT",   NUM_USD,      "right"),
-    ("Ref #",            12, "REF_NUM",        "@",          "center"),
-    ("Ref Type",         10, "REF_TYPE",       "@",          "center"),
-    ("Payment Method",   16, "PAYMENT_METHOD", "@",          "left"),
-    ("Due Date",         13, "DUE_DATE",       "MM/DD/YYYY", "center"),
-    ("Payment Date",     13, "PAYMENT_DATE",   "MM/DD/YYYY", "center"),
-    ("Journal #",        14, "JOURNAL_NUMBER", "@",          "center"),
-    ("Created By",       16, "CREATED_BY",     "@",          "left"),
+    ("Year-Period",      12, "YEAR_PERIOD",       "@",          "center"),
+    ("Customer",         28, "CUST_NAME",         "@",          "left"),
+    ("Terms Description",24, "TERMS_DESCRIPTION",          "@",        "left"),
+    ("Cust Code",        10, "CUST_CODE",         "@",          "center"),
+    ("Discount Amt",     14, "DISCOUNT_AMT",      NUM_USD,      "right"),
+    ("Ref #",            12, "REF_NUM",           "@",          "center"),
+    ("Ref Type",         10, "REF_TYPE",          "@",          "center"),
+    ("Payment Method",   16, "PAYMENT_METHOD",    "@",          "left"),
+    ("Due Date",         13, "DUE_DATE",          "MM/DD/YYYY", "center"),
+    ("Payment Date",     13, "PAYMENT_DATE",      "MM/DD/YYYY", "center"),
+    ("Journal #",        14, "JOURNAL_NUMBER",    "@",          "center"),
+    ("Created By",       16, "CREATED_BY",        "@",          "left"),
 ]
 
 DATE_COLS = {"DUE_DATE", "PAYMENT_DATE"}
@@ -124,6 +127,7 @@ class Loader:
             SELECT
                 `DATABASE`  AS DATABASE,
                 CUST_NAME,
+                TERMS_DESCRIPTION,
                 CUST_CODE,
                 POSTING_YEAR,
                 POSTING_PERIOD,
@@ -151,7 +155,8 @@ class Loader:
         df["DISCOUNT_AMT"] = pd.to_numeric(df["DISCOUNT_AMT"], errors="coerce").fillna(0)
         for col in ["DUE_DATE", "PAYMENT_DATE"]:
             df[col] = pd.to_datetime(df[col], errors="coerce")
-        for col in ["DATABASE", "CUST_NAME", "CUST_CODE", "REF_NUM", "REF_TYPE",
+        for col in ["DATABASE", "CUST_NAME", "TERMS_DESCRIPTION",
+                    "CUST_CODE", "REF_NUM", "REF_TYPE",
                     "PAYMENT_METHOD", "JOURNAL_NUMBER", "CREATED_BY", "YEAR_PERIOD"]:
             df[col] = (df[col].astype(str).str.strip()
                        .replace({"nan": "", "None": ""}).fillna(""))
@@ -198,73 +203,10 @@ class ReportBuilder:
         ws.row_dimensions[1].height = 20
         ws.row_dimensions[2].height = 14
 
-    # ── SUMMARY tab: by Database + Year ──────────────────────────────────────
-
-    def build_summary_tab(self) -> None:
-        ws = self.wb.create_sheet("SUMMARY", index=0)
-        TOTAL_COLS = 4
-
-        self._title_banner(
-            ws, TOTAL_COLS,
-            f"AR Discount Tracking  |  {TODAY.strftime('%B %d, %Y')}",
-            f"{len(self.df):,} discount transactions  |  Source: {MODEL_NAME}",
-        )
-
-        headers = ["Database", "Year", "Count", "Discount Amt (USD)"]
-        widths  = [14, 10, 10, 18]
-        for ci, (hdr, width) in enumerate(zip(headers, widths), start=1):
-            c = ws.cell(row=3, column=ci, value=hdr)
-            c.font      = S.font(bold=True)
-            c.fill      = S.fill(S.COL_BG)
-            c.alignment = S.align("center", wrap=True)
-            c.border    = Border(left=S.THIN_G, right=S.THIN_G,
-                                 top=S.OUTER,   bottom=S.OUTER)
-            ws.column_dimensions[get_column_letter(ci)].width = width
-        ws.row_dimensions[3].height = 18
-
-        grouped = (
-            self.df.groupby(["DATABASE", "POSTING_YEAR"])["DISCOUNT_AMT"]
-            .agg(["count", "sum"])
-            .reset_index()
-            .sort_values(["POSTING_YEAR", "DATABASE"], ascending=[False, True])
-        )
-
-        cur_row = 4
-        grand_count, grand_amt = 0, 0.0
-        for i, (_, row) in enumerate(grouped.iterrows()):
-            bg = S.ALT_BG if i % 2 == 1 else S.EVEN_BG
-            year_val = int(row["POSTING_YEAR"]) if pd.notna(row["POSTING_YEAR"]) else None
-            self._sc(ws, cur_row, 1, row["DATABASE"], bg=bg, halign="left",
-                     border=Border(bottom=S.THIN_G))
-            self._sc(ws, cur_row, 2, year_val, bg=bg, fmt="0", halign="center",
-                     border=Border(bottom=S.THIN_G))
-            self._sc(ws, cur_row, 3, int(row["count"]), bg=bg, fmt="#,##0",
-                     halign="center", border=Border(bottom=S.THIN_G))
-            self._sc(ws, cur_row, 4, float(row["sum"]), bg=bg, fmt=NUM_USD,
-                     border=Border(bottom=S.THIN_G))
-            grand_count += int(row["count"])
-            grand_amt   += float(row["sum"])
-            ws.row_dimensions[cur_row].height = 15
-            cur_row += 1
-
-        self._sc(ws, cur_row, 1, "Grand Total", bold=True,
-                 fg=S.GRAND_FG, bg=S.GRAND_BG, halign="left")
-        self._sc(ws, cur_row, 2, "", bold=True, fg=S.GRAND_FG, bg=S.GRAND_BG)
-        self._sc(ws, cur_row, 3, grand_count, bold=True,
-                 fg=S.GRAND_FG, bg=S.GRAND_BG, fmt="#,##0", halign="center")
-        self._sc(ws, cur_row, 4, grand_amt, bold=True,
-                 fg=S.GRAND_FG, bg=S.GRAND_BG, fmt=NUM_USD)
-        ws.row_dimensions[cur_row].height = 16
-
-        S.apply_outer_border(ws, 1, cur_row, 1, TOTAL_COLS)
-        ws.freeze_panes = "A4"
-        print(f"  Summary: {len(grouped)} database/year groups | "
-              f"{grand_count:,} discounts | ${grand_amt:,.0f}")
-
     # ── per-database DETAIL tab ──────────────────────────────────────────────
 
     def build_database_tab(self, db: str) -> None:
-        safe = (db[:31] or "UNKNOWN").replace("/", "-").replace("\\", "-")
+        safe = (f"{db} Detail"[:31] or "UNKNOWN").replace("/", "-").replace("\\", "-")
         ws = self.wb.create_sheet(safe)
         db_df = self.df[self.df["DATABASE"] == db]
         N = len(DETAIL_COLS)
@@ -320,8 +262,182 @@ class ReportBuilder:
         ws.auto_filter.ref = f"A3:{get_column_letter(N)}{cur_row - 1}"
         print(f"  {safe}: {len(db_df):,} rows | ${grand_amt:,.0f}")
 
+    # ── BY CUSTOMER tab: pivot, customer x month ──────────────────────────────
+
+    @staticmethod
+    def _month_label(year_period: str) -> str:
+        """'202601' -> 'Jan 2026'. Falls back to the raw string if it
+        doesn't parse as YYYYMM (keeps the tab from breaking on unexpected
+        formats rather than raising)."""
+        try:
+            yr, mo = int(year_period[:4]), int(year_period[4:6])
+            return date(yr, mo, 1).strftime("%b %Y")
+        except (ValueError, IndexError):
+            return year_period
+
+    def build_customer_monthly_tab(self) -> None:
+        ws = self.wb.create_sheet("BY CUSTOMER", index=0)
+        df = self.df
+
+        # All history -- no year cutoff.
+        periods = sorted(
+            (p for p in df["YEAR_PERIOD"].unique() if p),
+            reverse=True,  # most recent month first (leftmost column)
+        )
+        month_labels = [self._month_label(p) for p in periods]
+
+        # Column layout: Database, Customer, Payment Terms, Terms Code,
+        # Terms Description, Total, then months (newest first)
+        info_cols        = ["TERMS_DESCRIPTION"]
+        info_headers     = ["Terms Description"]
+        info_widths      = [24]
+        total_col        = 3 + len(info_cols)
+        month_col_start  = total_col + 1
+        N = total_col + len(periods)
+
+        self._title_banner(
+            ws, N,
+            f"AR Discount by Customer  |  Monthly  |  {TODAY.strftime('%B %d, %Y')}",
+            f"{df['CUST_NAME'].nunique():,} customers  |  Source: {MODEL_NAME}",
+        )
+
+        # Header row
+        header_cells = [("Database", 1), ("Customer", 2)]
+        header_cells += list(zip(info_headers, range(3, 3 + len(info_cols))))
+        header_cells += [("Total (USD)", total_col)]
+        for text, col in header_cells:
+            c = ws.cell(row=3, column=col, value=text)
+            c.font      = S.font(bold=True)
+            c.fill      = S.fill(S.COL_BG)
+            c.alignment = S.align("center", wrap=True)
+            c.border    = Border(left=S.THIN_G, right=S.THIN_G,
+                                 top=S.OUTER,   bottom=S.OUTER)
+        ws.column_dimensions["A"].width = 12
+        ws.column_dimensions["B"].width = 28
+        for i, width in enumerate(info_widths):
+            ws.column_dimensions[get_column_letter(3 + i)].width = width
+        ws.column_dimensions[get_column_letter(total_col)].width = 15
+        for i, label in enumerate(month_labels):
+            col = month_col_start + i
+            c = ws.cell(row=3, column=col, value=label)
+            c.font      = S.font(bold=True)
+            c.fill      = S.fill(S.COL_BG)
+            c.alignment = S.align("center", wrap=True)
+            c.border    = Border(left=S.THIN_G, right=S.THIN_G,
+                                 top=S.OUTER,   bottom=S.OUTER)
+            ws.column_dimensions[get_column_letter(col)].width = 12
+        ws.row_dimensions[3].height = 20
+
+        # Pivot: (database, customer) rows x year_period columns, summed.
+        # reindex to `periods` controls column order (newest first).
+        pivot = (
+            df.pivot_table(
+                index=["DATABASE", "CUST_NAME"],
+                columns="YEAR_PERIOD",
+                values="DISCOUNT_AMT",
+                aggfunc="sum",
+                fill_value=0,
+            )
+            .reindex(columns=periods, fill_value=0)
+        )
+        pivot["TOTAL"] = pivot.sum(axis=1)
+        pivot = pivot.reset_index()
+        # Safety net: drop any all-zero rows (shouldn't normally occur, since
+        # every customer here has at least one real discount by the model's
+        # own filter, but harmless to keep).
+        pivot = pivot[pivot["TOTAL"] != 0]
+
+        # Terms/discount info is a per-customer attribute, not something to
+        # sum -- pulled via a separate lookup (first non-blank/non-null value
+        # seen per customer) and merged in, rather than folded into the
+        # pivot's groupby index. Using the index would silently split a
+        # customer into multiple rows if their terms value were ever
+        # inconsistent across transactions; a lookup instead just picks one.
+        #
+        # Which columns are numeric is keyed off NUMERIC_INFO_COLS (by name)
+        # rather than sniffed via pandas dtype -- an all-NaN/all-None slice
+        # can register as 'object' dtype in some pandas groupby paths, which
+        # would otherwise misclassify a genuinely-numeric column.
+        NUMERIC_INFO_COLS = set()  # e.g. {"SOME_NUMERIC_FIELD"} -- none currently in info_cols
+
+        def _first_valid(s: pd.Series):
+            is_numeric = s.name in NUMERIC_INFO_COLS
+            if is_numeric:
+                nonblank = pd.to_numeric(s, errors="coerce").dropna()
+            else:
+                nonblank = s[(s != "") & s.notna()]
+            if len(nonblank):
+                return nonblank.iloc[0]
+            return None if is_numeric else ""
+
+        customer_info = (
+            df.groupby(["DATABASE", "CUST_NAME"])[info_cols]
+            .agg(_first_valid)
+            .reset_index()
+        )
+        pivot = pivot.merge(customer_info, on=["DATABASE", "CUST_NAME"], how="left")
+
+        # Sort by database ascending, then biggest total-discount customer
+        # first within it.
+        pivot = pivot.sort_values(["DATABASE", "TOTAL"], ascending=[True, False])
+
+        # Positive amounts normal, zero shown as a dash -- easier to scan
+        # a wide monthly grid than a wall of "0.00"s.
+        ZERO_DASH_USD = '#,##0.00;-#,##0.00;"-"'
+
+        cur_row = 4
+        col_grand_totals = [0.0] * len(periods)
+        grand_total = 0.0
+        for i, (_, row) in enumerate(pivot.iterrows()):
+            bg = S.ALT_BG if i % 2 == 1 else S.EVEN_BG
+            self._sc(ws, cur_row, 1, row["DATABASE"], bg=bg, halign="left",
+                     border=Border(bottom=S.THIN_G))
+            self._sc(ws, cur_row, 2, row["CUST_NAME"], bg=bg, halign="left",
+                     border=Border(bottom=S.THIN_G))
+            for ci, col_key in enumerate(info_cols):
+                val = row[col_key]
+                if col_key in NUMERIC_INFO_COLS:
+                    val = float(val) if pd.notna(val) else None
+                    self._sc(ws, cur_row, 3 + ci, val, bg=bg, fmt="#,##0.00", halign="right",
+                             border=Border(bottom=S.THIN_G))
+                else:
+                    self._sc(ws, cur_row, 3 + ci, val, bg=bg, halign="left",
+                             border=Border(bottom=S.THIN_G))
+            row_total = float(row["TOTAL"])
+            self._sc(ws, cur_row, total_col, row_total, bold=True, bg=bg, fmt=ZERO_DASH_USD,
+                     border=Border(bottom=S.THIN_G, right=S.THIN))
+            for pi, period in enumerate(periods):
+                val = float(row[period])
+                self._sc(ws, cur_row, month_col_start + pi, val, bg=bg, fmt=ZERO_DASH_USD,
+                         border=Border(bottom=S.THIN_G))
+                col_grand_totals[pi] += val
+            grand_total += row_total
+            ws.row_dimensions[cur_row].height = 15
+            cur_row += 1
+
+        # Grand total row
+        for ci in range(1, N + 1):
+            c = ws.cell(row=cur_row, column=ci)
+            c.fill   = S.fill(S.GRAND_BG)
+            c.font   = S.font(bold=True, color=S.GRAND_FG)
+            c.border = Border(top=S.OUTER, bottom=S.OUTER)
+        ws.cell(row=cur_row, column=1, value="GRAND TOTAL").alignment = S.align("left")
+        self._sc(ws, cur_row, total_col, grand_total, bold=True,
+                 fg=S.GRAND_FG, bg=S.GRAND_BG, fmt=ZERO_DASH_USD)
+        for pi, total in enumerate(col_grand_totals):
+            self._sc(ws, cur_row, month_col_start + pi, total, bold=True,
+                     fg=S.GRAND_FG, bg=S.GRAND_BG, fmt=ZERO_DASH_USD)
+        ws.row_dimensions[cur_row].height = 16
+
+        S.apply_outer_border(ws, 1, cur_row, 1, N)
+        # Freeze Database + Customer + the 4 info columns + Total, plus header row
+        ws.freeze_panes = f"{get_column_letter(month_col_start)}4"
+        ws.auto_filter.ref = f"A3:{get_column_letter(N)}{cur_row - 1}"
+        print(f"  By Customer: {len(pivot)} customers | "
+              f"{len(periods)} months | ${grand_total:,.0f}")
+
     def build(self) -> None:
-        self.build_summary_tab()
+        self.build_customer_monthly_tab()
         for db in sorted(self.df["DATABASE"].unique()):
             self.build_database_tab(db)
 

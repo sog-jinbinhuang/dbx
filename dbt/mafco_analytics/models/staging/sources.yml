@@ -36,6 +36,7 @@ sources:
       - name: remarks
       - name: suppname
       - name: arcash
+      - name: payment_terms
       - name: onestream_hierarchy
       - name: onestream_facts
       - name: onestream_fxrates
