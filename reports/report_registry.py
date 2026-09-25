@@ -150,7 +150,7 @@ REPORT_REGISTRY: list[ReportDef] = [
         recipients=Recipients(
             to=["jhuang@mafcolicorice.com"],
         ),
-        subject="Production Volume & Cost",
+        subject="Global Production Cost",
         group="weekly",
     ),
     ReportDef(
@@ -169,7 +169,19 @@ REPORT_REGISTRY: list[ReportDef] = [
             "rkhan@mafcolicorice.com",
             "jhuang@mafcolicorice.com",
     ]),
-    subject="Global Order Audit (Weekly)",
+    subject="Global Order Entry Audit",
     group="weekly",  # matches the original weekly_emailer.py schedule
+    ),
+    ReportDef(
+        name="Global Discount Tracking",
+        module_path=REPORTS_DIR / "rpt_ar_discounts.py",
+        recipients=Recipients(
+            to=[
+                "ahaque@mafcolicorice.com",  
+                "pberg@mafcolicorice.com",
+                "jhuang@mafcolicorice.com",],
+        ),
+        subject="Global Discount Tracking",
+        group="weekly",
     ),
 ]
